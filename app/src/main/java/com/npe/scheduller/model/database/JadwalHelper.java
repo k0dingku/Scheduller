@@ -1,10 +1,13 @@
 package com.npe.scheduller.model.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.npe.scheduller.model.JadwalModel;
+
+import com.npe.scheduller.model.database.DatabaseContract;
 
 import java.util.ArrayList;
 
@@ -29,18 +32,23 @@ public class JadwalHelper {
 
     public ArrayList<JadwalModel> getAllData(){
         ArrayList<JadwalModel> jadwals = new ArrayList<>();
-
-
         return jadwals;
     }
 
     public long insert(JadwalModel jadwalModel){
-        return 0;
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(DatabaseContract.JadwalColumns.JUDUL, jadwalModel.getJudul());
+        initialValues.put(DatabaseContract.JadwalColumns.REMIND, jadwalModel.getRemind());
+        initialValues.put(DatabaseContract.JadwalColumns.WARNA, jadwalModel.getWarna());
+        initialValues.put(DatabaseContract.JadwalColumns.DATE, jadwalModel.getDate());
+        initialValues.put(DatabaseContract.JadwalColumns.TIME, jadwalModel.getTime());
+
+        return database.insert(DatabaseContract.TABEL_JADWAL, null, initialValues);
     }
     public int update(JadwalModel jadwalModel){
         return 0;
     }
-    public int deleter(int id){
-        return 0;
+    public int delete(int id){
+        return database.delete(DatabaseContract.TABEL_JADWAL, id + " = '" + id + "'", null);
     }
 }
