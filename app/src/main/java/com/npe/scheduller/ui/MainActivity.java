@@ -1,25 +1,33 @@
 package com.npe.scheduller.ui;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.npe.scheduller.BuildConfig;
 import com.npe.scheduller.R;
+import com.npe.scheduller.presenter.PresenterJadwal;
+import com.npe.scheduller.view.JadwalView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements JadwalView.JadwalViewMain {
     private Toolbar toolbar;
     private FrameLayout frameGuide;
     private Button btnGuideAdd, btnGuideSearch, btnGuideDate;
     private LinearLayout layoutGuideAdd, layoutGuideSearch, layoutGuideDate;
+
+    //contoh mvp
+    PresenterJadwal presenterJadwal;
+    EditText judul, date, time, remind, warna;
+    Button btnTambah;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,24 @@ public class MainActivity extends AppCompatActivity {
         layoutGuideSearch = findViewById(R.id.layoutSearch);
 
         checkFirstRun();
+
+        judul = findViewById(R.id.etJudulM);
+        date = findViewById(R.id.etDateM);
+        time = findViewById(R.id.etTimeM);
+        remind = findViewById(R.id.etRemindM);
+        warna = findViewById(R.id.etWarnaM);
+        btnTambah = findViewById(R.id.btnAddEventM);
+
+        presenterJadwal = new PresenterJadwal(this, getApplicationContext());
+        //insert data
+        btnTambah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenterJadwal.dataMasukkan(judul.getText().toString(), date.getText().toString(), time.getText().toString(),
+                        remind.getText().toString(),
+                        warna.getText().toString());
+            }
+        });
 
     }
 
@@ -110,5 +136,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void insertSuccess(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

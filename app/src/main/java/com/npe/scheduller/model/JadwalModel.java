@@ -1,6 +1,6 @@
 package com.npe.scheduller.model;
 
-public class JadwalModel {
+public class JadwalModel implements IJadwalModel {
     private int id, remind, warna;
     private String date, time, judul;
 

@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.AddEventActivity">
 
         </activity>
         <activity android:name=".ui.SplashScreen" />
-        <activity android:name=".ui.AddEventActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

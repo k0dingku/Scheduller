@@ -67,7 +67,7 @@ public class JadwalHelper {
 
         return database.insert(DatabaseContract.TABEL_JADWAL,null, initialValues);
     }
-    public int update(JadwalModel jadwalModel){
+    public int edit(JadwalModel jadwalModel){
         return 0;
     }
     public int delete(int id){
