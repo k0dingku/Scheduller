@@ -9,7 +9,11 @@ import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
 import com.npe.scheduller.view.JadwalView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
     Context context;
@@ -38,12 +42,41 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
     }
 
     @Override
-    public void setAlertDate() {
+    public void setDate(String day, String month, String year) {
+        String date = day+"/"+month+"/"+year;
+        view.getDate(date);
+    }
+
+    @Override
+    public void setTime(String hour, String minute) {
+        String time = hour+":"+minute;
+        view.getTime(time);
+    }
+
+    @Override
+    public void calculateDifferenceDate(String date) {
         Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int mount = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        view.alertDialogDate(day, mount, year);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        //get current date and time
+        String strCurrentDate = sdf.format(calendar.getTime());
+        try {
+            Date date1 = sdf.parse(date);
+            Date date2 = sdf.parse(strCurrentDate);
+            setDifference(date1, date2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setDifference(Date date1, Date date2) {
+        long diff = date1.getTime() - date2.getTime();
+        long diffInDays = TimeUnit.MILLISECONDS.toDays(diff);
+        long diffInHours = TimeUnit.MILLISECONDS.toHours(diff);
+        Log.i("Difference", String.valueOf(diff));
+        Log.i("DifferenceDays", String.valueOf(diffInDays));
+        Log.i("DifferenceHours", String.valueOf(diffInHours));
+        view.getDifference(diffInDays);
     }
 
     @Override
@@ -56,6 +89,7 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
         }
         return valid;
     }
+
 
     @Override
     public void dataMasukkan(String judul, String date, String time, int remind, int warna) {
