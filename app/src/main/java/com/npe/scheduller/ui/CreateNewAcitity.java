@@ -1,14 +1,18 @@
 package com.npe.scheduller.ui;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.npe.scheduller.R;
@@ -23,12 +27,15 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             layoutBottomDate,
             layoutBottomRemind, layoutColor;
     BottomSheetBehavior sheetBehaviorColor, sheetBehaviorDate, sheetBehaviorRemind;
-    String judul;
+    String judul, date, time;
 
     //btn color
     Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
     //date picker
     DatePicker datePicker;
+    TimePicker timePicker;
+    Button btnOkDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +54,13 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorYellow = findViewById(R.id.btnColorYellow);
         btnPickColorGrey = findViewById(R.id.btnColorGrey);
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
+        btnOkDate = findViewById(R.id.btnOkDate);
         //datepicker
         datePicker = findViewById(R.id.datePicker);
         minDate();
-        
+        //time
+        timePicker = findViewById(R.id.timePicker);
+
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
@@ -74,7 +84,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnColor.setOnClickListener(this);
         btnRemind.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
-
+        btnOkDate.setOnClickListener(this);
 
     }
 
@@ -119,11 +129,6 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         }
     }
 
-    @Override
-    public void alertDialogDate(int day, int month, int year) {
-
-    }
-
 
     @Override
     public void insertSuccess(String message) {
@@ -135,6 +140,17 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     }
 
+    @Override
+    public void getDate(String date) {
+        this.date = date;
+    }
+
+    @Override
+    public void getTime(String time) {
+        this.time = time;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -154,6 +170,10 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 showBottomSheetRemind();
                 break;
             case R.id.btnInsert:
+                judul = etJudul.getText().toString();
+                if (presenter.checkJudul(judul, etJudul)) {
+                    //presenter.dataMasukkan(judul,date, );
+                }
                 break;
             case R.id.btnColorRed:
                 int colorRed = getResources().getColor(R.color.colorRed);
@@ -185,7 +205,17 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 disableAnotherColor(layoutColor, R.id.btnColorOrange);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorOrange), Toast.LENGTH_SHORT).show();
                 break;
-
+            case R.id.btnOkDate:
+                //date
+                String day = String.valueOf(datePicker.getDayOfMonth());
+                String tahun = String.valueOf(datePicker.getYear());
+                String bulan = String.valueOf(datePicker.getMonth());
+                presenter.setDate(day, bulan, tahun);
+                //time
+                String hour = String.valueOf(timePicker.getHour());
+                String minute = String.valueOf(timePicker.getMinute());
+                presenter.setTime(hour, minute);
+                break;
         }
     }
 

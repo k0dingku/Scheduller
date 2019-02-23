@@ -38,12 +38,15 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
     }
 
     @Override
-    public void setAlertDate() {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int mount = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        view.alertDialogDate(day, mount, year);
+    public void setDate(String day, String month, String year) {
+        String date = day+"/"+month+"/"+year;
+        view.getDate(date);
+    }
+
+    @Override
+    public void setTime(String hour, String minute) {
+        String time = hour+"/"+minute;
+        view.getTime(time);
     }
 
     @Override

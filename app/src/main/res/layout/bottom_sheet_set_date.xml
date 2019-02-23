@@ -87,7 +87,9 @@
         </TimePicker>
 
         <Button
-            android:id="@+id/button"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorBlue"
+            android:id="@+id/btnOkDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
