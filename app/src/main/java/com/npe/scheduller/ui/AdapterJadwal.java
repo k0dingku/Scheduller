@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder> {
 
     private ArrayList<JadwalModel> dataSet;
+    private static ClickListener clickListener;
 
     public AdapterJadwal(ArrayList<JadwalModel> data) {
         this.dataSet = data;
@@ -43,8 +44,15 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
         return dataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         TextView title,date,time;
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            clickListener.onItemLongClick(getAdapterPosition(), v);
+            return false;
+        }
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,5 +60,13 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
             date = (TextView) itemView.findViewById(R.id.tvDate);
             time = (TextView) itemView.findViewById(R.id.tvTime);
         }
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        AdapterJadwal.clickListener = clickListener;
+    }
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+        void onItemLongClick(int position, View v);
     }
 }
