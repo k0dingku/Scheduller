@@ -9,11 +9,12 @@ import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
 import com.npe.scheduller.view.JadwalView;
 
+import java.util.Calendar;
+
 public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
     Context context;
     JadwalView.JadwalViewMain view;
     JadwalOperations jadwalOperations;
-
     public JadwalPresenter(Context context, JadwalView.JadwalViewMain view) {
         this.context = context;
         jadwalOperations = new JadwalOperations(context);
@@ -34,6 +35,15 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
             Log.i("InsertJadwalError", "Error");
             view.inserrtFailed("Gagal Insert Jadwal");
         }
+    }
+
+    @Override
+    public void setAlertDate() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int mount = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        view.alertDialogDate(day, mount, year);
     }
 
     @Override

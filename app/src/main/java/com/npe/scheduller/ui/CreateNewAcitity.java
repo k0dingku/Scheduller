@@ -1,10 +1,14 @@
 package com.npe.scheduller.ui;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -13,10 +17,12 @@ import com.npe.scheduller.R;
 import com.npe.scheduller.presenter.JadwalPresenter;
 import com.npe.scheduller.view.JadwalView;
 
-public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain {
+public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
     private JadwalPresenter presenter;
-    Button btnDate, btnTime, btnColor, btnRemind, btnInsert;
+    Button btnDate, btnColor, btnRemind, btnInsert;
     EditText etJudul;
+    LinearLayout layoutBottomColor, layoutBottomDate;
+    BottomSheetBehavior sheetBehaviorColor;
     String judul;
 
     BottomSheetBehavior bottomSheetBehavior;
@@ -28,44 +34,87 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         presenter = new JadwalPresenter(getApplicationContext(), this);
         btnDate = findViewById(R.id.btnDate);
         btnColor = findViewById(R.id.btnColor);
-        btnTime = findViewById(R.id.btnTime);
         btnRemind = findViewById(R.id.btnRemind);
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
+        //color
+        layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
+        sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
 
-        LinearLayout linearLayout = findViewById(R.id.bottom_sheet_set_date);
+        //set sheet color hiden
+        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetColorBehavior();
 
-        bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        layoutBottomDate = findViewById(R.id.bottom_sheet_set_date);
+
+        bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomDate);
+
+        btnDate.setOnClickListener(this);
+        btnColor.setOnClickListener(this);
+        btnRemind.setOnClickListener(this);
+        btnInsert.setOnClickListener(this);
 
 
-        //check judul
+    }
 
-        btnInsert.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void bottomSheetColorBehavior() {
+        sheetBehaviorColor.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onClick(View v) {
-                judul = etJudul.getText().toString();
-                if(presenter.checkJudul(judul, etJudul)){
-                    Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_SHORT).show();
+            public void onStateChanged(@NonNull View view, int i) {
+                switch (i){
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
                 }
             }
-        });
-        btnDate.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
-                toogleBottomSheet();
+            public void onSlide(@NonNull View view, float v) {
+
             }
         });
     }
 
-
-    private void toogleBottomSheet() {
+    @Override
+    public void showBottomSheetDate() {
         if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         } else {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
+
+    @Override
+    public void bottomSheetDateBehavior() {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void showBottomSheetColor() {
+        if (sheetBehaviorColor.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehaviorColor.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
+
+    @Override
+    public void alertDialogDate(int day, int month, int year) {
+
+    }
+
 
     @Override
     public void insertSuccess(String message) {
@@ -75,5 +124,21 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     @Override
     public void inserrtFailed(String message) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnDate:
+                showBottomSheetDate();
+                break;
+            case R.id.btnColor:
+                showBottomSheetColor();
+                break;
+            case R.id.btnRemind:
+                break;
+            case R.id.btnInsert:
+                break;
+        }
     }
 }
