@@ -16,13 +16,15 @@ import com.npe.scheduller.R;
 import com.npe.scheduller.presenter.JadwalPresenter;
 import com.npe.scheduller.view.JadwalView;
 
-public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain {
+public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
     private JadwalPresenter presenter;
-    Button btnDate, btnTime, btnColor, btnRemind, btnInsert;
+    Button btnDate, btnColor, btnRemind, btnInsert;
     EditText etJudul;
-    LinearLayout layoutBottomColor;
+    LinearLayout layoutBottomColor, layoutBottomDate;
     BottomSheetBehavior sheetBehaviorColor;
     String judul;
+
+    BottomSheetBehavior bottomSheetBehavior;
     //btn color
     Button btnColorRed;
     @Override
@@ -33,7 +35,6 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         presenter = new JadwalPresenter(getApplicationContext(), this);
         btnDate = findViewById(R.id.btnDate);
         btnColor = findViewById(R.id.btnColor);
-        btnTime = findViewById(R.id.btnTime);
         btnRemind = findViewById(R.id.btnRemind);
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
@@ -46,30 +47,16 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetColorBehavior();
 
-        btnDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.setAlertDate();
-            }
-        });
+        layoutBottomDate = findViewById(R.id.bottom_sheet_set_date);
 
-        btnColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetColor();
-            }
-        });
+        bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomDate);
 
-        btnInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //check judul
-                judul = etJudul.getText().toString();
-                if (presenter.checkJudul(judul, etJudul)) {
-                    Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        btnDate.setOnClickListener(this);
+        btnColor.setOnClickListener(this);
+        btnRemind.setOnClickListener(this);
+        btnInsert.setOnClickListener(this);
+
+
     }
 
     @Override
@@ -103,10 +90,24 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     }
 
     @Override
+    public void showBottomSheetDate() {
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
+
+    @Override
+    public void bottomSheetDateBehavior() {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
     public void showBottomSheetColor() {
         if (sheetBehaviorColor.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_EXPANDED);
-            
+
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -117,6 +118,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     }
 
+
     @Override
     public void insertSuccess(String message) {
 
@@ -125,5 +127,21 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     @Override
     public void inserrtFailed(String message) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnDate:
+                showBottomSheetDate();
+                break;
+            case R.id.btnColor:
+                showBottomSheetColor();
+                break;
+            case R.id.btnRemind:
+                break;
+            case R.id.btnInsert:
+                break;
+        }
     }
 }
