@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -27,7 +29,7 @@ import java.util.Date;
 
 public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
     private JadwalPresenter presenter;
-    private Button btnDate, btnColor, btnRemind, btnInsert;
+    private EditText etDate, etColor, etRemind;
     private EditText etJudul;
     private LinearLayout layoutBottomColor,
             layoutBottomDate,
@@ -48,12 +50,16 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_acitity);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.app_bar);
+        TextView title=findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        title.setText("New Task");
+
         //inisialisasi
         presenter = new JadwalPresenter(getApplicationContext(), this);
-        btnDate = findViewById(R.id.btnDate);
-        btnColor = findViewById(R.id.btnColor);
-        btnRemind = findViewById(R.id.btnRemind);
-        btnInsert = findViewById(R.id.btnInsert);
+        etDate = findViewById(R.id.etNewDate);
+        etColor = findViewById(R.id.etNewColor);
+        etRemind = findViewById(R.id.etNewRemind);
         etJudul = findViewById(R.id.etCreateJudul);
         layoutColor = findViewById(R.id.linearColor);
         btnPickColorRed = findViewById(R.id.btnColorRed);
@@ -90,10 +96,9 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         //set sheet remind hidden
         sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        btnDate.setOnClickListener(this);
-        btnColor.setOnClickListener(this);
-        btnRemind.setOnClickListener(this);
-        btnInsert.setOnClickListener(this);
+        etDate.setOnClickListener(this);
+        etColor.setOnClickListener(this);
+        etRemind.setOnClickListener(this);
     }
 
     @Override
@@ -196,27 +201,27 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnDate:
+            case R.id.etNewDate:
                 invisibleSheetColor();
                 invisibleSheetRemind();
                 showBottomSheetDate();
                 break;
-            case R.id.btnColor:
+            case R.id.etNewColor:
                 invisibleSheetDate();
                 invisibleSheetRemind();
                 showBottomSheetColor();
                 break;
-            case R.id.btnRemind:
+            case R.id.etNewRemind:
                 invisibleSheetDate();
                 invisibleSheetRemind();
                 showBottomSheetRemind();
                 break;
-            case R.id.btnInsert:
-                judul = etJudul.getText().toString();
-                if (presenter.checkJudul(judul, etJudul)) {
-                    //presenter.dataMasukkan(judul,date, );
-                }
-                break;
+//            case R.id.btnInsert:
+//                judul = etJudul.getText().toString();
+//                if (presenter.checkJudul(judul, etJudul)) {
+//                    //presenter.dataMasukkan(judul,date, );
+//                }
+//                break;
             case R.id.btnColorRed:
                 int colorRed = getResources().getColor(R.color.colorRed);
                 disableAnotherColor(layoutColor, R.id.btnColorRed);

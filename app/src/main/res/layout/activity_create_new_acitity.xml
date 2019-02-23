@@ -10,11 +10,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="20dp"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp">
 
             <EditText
                 android:id="@+id/etCreateJudul"
@@ -24,42 +26,33 @@
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnDate"
+        <EditText
+            android:id="@+id/etNewDate"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorAccent"
-            android:text="Date"
-            android:textColor="@color/colorWhite" />
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:clickable="true"
+            android:hint="Deadline"
+            android:focusable="false" />
 
-
-
-        <Button
-            android:id="@+id/btnColor"
+        <EditText
+            android:id="@+id/etNewRemind"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:text="Warna"
-            android:textColor="@color/colorWhite" />
-
-        <Button
-            android:id="@+id/btnRemind"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:hint="Start to Remind"
+            android:clickable="true"
+            android:editable="false"
+            android:focusable="false"/>
+        <EditText
+            android:id="@+id/etNewColor"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"
-            android:text="remind"
-            android:textColor="@color/colorWhite" />
-
-        <Button
-            android:id="@+id/btnInsert"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:text="insert"
-            android:textColor="@color/colorWhite" />
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:clickable="true"
+            android:hint="Color"
+            android:focusable="false"/>
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
