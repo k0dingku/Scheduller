@@ -3,6 +3,7 @@ package com.npe.scheduller.presenter;
 import android.content.Context;
 import android.database.SQLException;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
@@ -19,6 +20,8 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
         this.view = view;
     }
 
+
+
     @Override
     public void insertData(JadwalModel jadwalModel) {
         try{
@@ -31,6 +34,17 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
             Log.i("InsertJadwalError", "Error");
             view.inserrtFailed("Gagal Insert Jadwal");
         }
+    }
+
+    @Override
+    public Boolean checkJudul(String judul, EditText etJudul) {
+        boolean valid = true;
+        if(judul.isEmpty()){
+            valid = false;
+            etJudul.setError("Judul Masih Kosong");
+            etJudul.requestFocus();
+        }
+        return valid;
     }
 
     @Override
