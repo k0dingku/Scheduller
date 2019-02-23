@@ -5,6 +5,7 @@ public interface MainView {
         public void calendar();
         public void listactivity();
         public void bottomsheet();
+        public void deleteconfirmation();
     }
     public interface MainPresenterView{
 

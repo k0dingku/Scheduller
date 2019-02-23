@@ -15,7 +15,13 @@ import java.util.ArrayList;
 public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder> {
 
     private ArrayList<JadwalModel> dataSet;
-    private static ClickListener clickListener;
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener{
+        void OnItemClick(int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
 
     public AdapterJadwal(ArrayList<JadwalModel> data) {
         this.dataSet = data;
@@ -28,7 +34,7 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
 
         View view = layoutInflater.inflate(R.layout.list_jadwal,viewGroup,false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view,mListener);
     }
 
     @Override
@@ -37,6 +43,7 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
         viewHolder.title.setText(dataSet.get(i).getJudul());
         viewHolder.date.setText(dataSet.get(i).getDate());
         viewHolder.time.setText(dataSet.get(i).getTime());
+
     }
 
     @Override
@@ -44,29 +51,30 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
         return dataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         TextView title,date,time;
 
-
-        @Override
-        public boolean onLongClick(View v) {
-            clickListener.onItemLongClick(getAdapterPosition(), v);
-            return false;
-        }
-
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.tvTitle);
             date = (TextView) itemView.findViewById(R.id.tvDate);
             time = (TextView) itemView.findViewById(R.id.tvTime);
+            itemView.setOnLongClickListener(new View.OnLongClickListener(){
+                @Override
+                public boolean onLongClick(View v) {
+                    if(listener!=null){
+                        int position = getAdapterPosition();
+                        if(position!=RecyclerView.NO_POSITION){
+                            listener.OnItemClick(position);
+                        }
+                    }
+                    return false;
+                }
+            });
+
         }
+
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        AdapterJadwal.clickListener = clickListener;
-    }
-    public interface ClickListener {
-        void onItemClick(int position, View v);
-        void onItemLongClick(int position, View v);
-    }
+
 }

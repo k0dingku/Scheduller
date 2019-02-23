@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     app:cardUseCompatPadding="true"
+    android:id="@+id/list_jadwal"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
     android:layout_width="match_parent"
