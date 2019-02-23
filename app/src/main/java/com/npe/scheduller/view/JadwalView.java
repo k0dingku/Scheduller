@@ -12,6 +12,8 @@ public interface JadwalView {
         public void bottomSheetColorBehavior();
         public void showBottomSheetDate();
         public void bottomSheetDateBehavior();
+        public void showBottomSheetRemind();
+        public void bottomSheetRemindBehavior();
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
         public void disableAnotherColor(ViewGroup layout, int idBtn);

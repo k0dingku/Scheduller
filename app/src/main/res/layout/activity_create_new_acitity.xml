@@ -70,6 +70,8 @@
         <include layout="@layout/bottom_sheet_color" />
 
         <include layout="@layout/bottom_sheet_set_date" />
+
+        <include layout="@layout/bottom_sheet_remind"/>
     </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>
