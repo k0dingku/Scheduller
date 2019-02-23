@@ -1,5 +1,6 @@
 package com.npe.scheduller.view;
 
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.npe.scheduller.model.JadwalModel;
@@ -13,6 +14,7 @@ public interface JadwalView {
         public void bottomSheetDateBehavior();
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
+        public void disableAnotherColor(ViewGroup layout, int idBtn);
     }
 
     public interface JadwalViewPresenter{

@@ -20,6 +20,7 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
     <LinearLayout
+        android:id="@+id/linearColor"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginTop="10dp"

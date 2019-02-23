@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,7 +19,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     private JadwalPresenter presenter;
     Button btnDate, btnColor, btnRemind, btnInsert;
     EditText etJudul;
-    LinearLayout layoutBottomColor, layoutBottomDate;
+    LinearLayout layoutBottomColor, layoutBottomDate, layoutColor;
     BottomSheetBehavior sheetBehaviorColor;
     String judul;
 
@@ -37,7 +38,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnRemind = findViewById(R.id.btnRemind);
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
-
+        layoutColor = findViewById(R.id.linearColor);
         btnPickColorRed = findViewById(R.id.btnColorRed);
         btnPickColorBlue = findViewById(R.id.btnColorBlue);
         btnPickColorGreen = findViewById(R.id.btnColorGreen);
@@ -157,29 +158,46 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 break;
             case R.id.btnColorRed:
                 int colorRed = getResources().getColor(R.color.colorRed);
+                disableAnotherColor(layoutColor, R.id.btnColorRed);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorRed), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorBlue:
                 int colorBlue = getResources().getColor(R.color.colorBlue);
+                disableAnotherColor(layoutColor, R.id.btnColorBlue);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorBlue), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorGreen:
                 int colorGreen = getResources().getColor(R.color.colorGreen);
+                disableAnotherColor(layoutColor, R.id.btnColorGreen);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGreen), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorYellow:
                 int colorYellow = getResources().getColor(R.color.colorYellow);
+                disableAnotherColor(layoutColor, R.id.btnColorYellow);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorYellow), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorGrey:
                 int colorGrey = getResources().getColor(R.color.colorGrey);
+                disableAnotherColor(layoutColor, R.id.btnColorGrey);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGrey), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorOrange:
                 int colorOrange = getResources().getColor(R.color.colorOrange);
+                disableAnotherColor(layoutColor, R.id.btnColorOrange);
                 Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorOrange), Toast.LENGTH_SHORT).show();
                 break;
 
+        }
+    }
+
+    @Override
+    public void disableAnotherColor(ViewGroup layout, int idBtn) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            int childid = layout.getChildAt(i).getId();
+            View child = layout.getChildAt(i);
+            if(childid != idBtn){
+                child.setVisibility(View.GONE);
+            }
         }
     }
 }
