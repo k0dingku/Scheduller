@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -21,20 +22,22 @@ import com.npe.scheduller.view.JadwalView;
 
 public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
     private JadwalPresenter presenter;
-    Button btnDate, btnColor, btnRemind, btnInsert;
-    EditText etJudul;
-    LinearLayout layoutBottomColor,
+    private Button btnDate, btnColor, btnRemind, btnInsert;
+    private EditText etJudul;
+    private LinearLayout layoutBottomColor,
             layoutBottomDate,
             layoutBottomRemind, layoutColor;
-    BottomSheetBehavior sheetBehaviorColor, sheetBehaviorDate, sheetBehaviorRemind;
-    String judul, date, time;
+    private BottomSheetBehavior sheetBehaviorColor, sheetBehaviorDate, sheetBehaviorRemind;
+    private String judul, date, time, currentDate;
+    private int diffRemind;
 
     //btn color
-    Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
+    private Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
     //date picker
-    DatePicker datePicker;
-    TimePicker timePicker;
-    Button btnOkDate;
+    private DatePicker datePicker;
+    private TimePicker timePicker;
+    private NumberPicker numberPicker;
+    private Button btnOkDate, btnOkRemind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,14 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorGrey = findViewById(R.id.btnColorGrey);
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
         btnOkDate = findViewById(R.id.btnOkDate);
+        btnOkRemind = findViewById(R.id.btnOkRemind);
         //datepicker
         datePicker = findViewById(R.id.datePicker);
         minDate();
-        //time
+        //time picker
         timePicker = findViewById(R.id.timePicker);
-
+        //number picker
+        numberPicker = findViewById(R.id.numberPicker);
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
@@ -85,7 +90,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnRemind.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
         btnOkDate.setOnClickListener(this);
-
+        btnOkRemind.setOnClickListener(this);
     }
 
     @Override
@@ -209,14 +214,26 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 //date
                 String day = String.valueOf(datePicker.getDayOfMonth());
                 String tahun = String.valueOf(datePicker.getYear());
-                String bulan = String.valueOf(datePicker.getMonth());
+                String bulan = String.valueOf(datePicker.getMonth() + 1);
                 presenter.setDate(day, bulan, tahun);
                 //time
                 String hour = String.valueOf(timePicker.getHour());
                 String minute = String.valueOf(timePicker.getMinute());
                 presenter.setTime(hour, minute);
                 break;
+            case R.id.btnOkRemind:
+                String date = this.date + " " +this.time;
+                presenter.calculateDifferenceDate(date);
+                numberPicker.setMinValue(0);
+                numberPicker.setMaxValue(diffRemind);
+                Log.i("Date",date);
+                break;
         }
+    }
+
+    @Override
+    public void getDifference(long diff) {
+        this.diffRemind = (int) diff;
     }
 
     @Override
