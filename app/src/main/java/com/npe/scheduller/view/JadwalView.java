@@ -6,6 +6,7 @@ public interface JadwalView {
     public interface JadwalViewMain{
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
+
     }
 
     public interface JadwalViewPresenter{
