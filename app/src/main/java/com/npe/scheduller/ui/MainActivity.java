@@ -1,42 +1,38 @@
 package com.npe.scheduller.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
 
 import com.npe.scheduller.R;
-import com.npe.scheduller.presenter.JadwalPresenter;
-import com.npe.scheduller.view.JadwalView;
 
-public class MainActivity extends AppCompatActivity implements JadwalView.JadwalViewMain {
+public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private JadwalPresenter presenter;
+    private Button btnCreate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //inisialisasi
         recyclerView = findViewById(R.id.recyclerViewMain);
-        presenter = new JadwalPresenter(getApplicationContext(), this);
+        btnCreate = findViewById(R.id.btnCreate);
 
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toCreate();
+            }
+        });
+    }
+
+    private void toCreate() {
+        Intent intent = new Intent(getApplicationContext(), CreateNewAcitity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 
-    @Override
-    public void recyclerAdapter() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
-    }
-
-    @Override
-    public void insertSuccess(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void inserrtFailed(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
 }

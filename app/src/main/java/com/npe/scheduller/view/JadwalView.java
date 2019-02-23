@@ -4,7 +4,6 @@ import com.npe.scheduller.model.JadwalModel;
 
 public interface JadwalView {
     public interface JadwalViewMain{
-        void recyclerAdapter();
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
     }
