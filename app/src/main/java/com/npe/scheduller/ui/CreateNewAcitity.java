@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,10 @@ import android.widget.Toast;
 import com.npe.scheduller.R;
 import com.npe.scheduller.presenter.JadwalPresenter;
 import com.npe.scheduller.view.JadwalView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
     private JadwalPresenter presenter;
@@ -89,8 +94,6 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnColor.setOnClickListener(this);
         btnRemind.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
-        btnOkDate.setOnClickListener(this);
-        btnOkRemind.setOnClickListener(this);
     }
 
     @Override
@@ -102,6 +105,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     public void showBottomSheetDate() {
         if (sheetBehaviorDate.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorDate.setState(BottomSheetBehavior.STATE_EXPANDED);
+            btnOkDate.setOnClickListener(this);
         } else {
             sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -111,6 +115,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     public void showBottomSheetRemind() {
         if (sheetBehaviorRemind.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_EXPANDED);
+            btnOkRemind.setOnClickListener(this);
         } else {
             sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -153,6 +158,38 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     @Override
     public void getTime(String time) {
         this.time = time;
+    }
+
+
+    @Override
+    public void getDifference(long diff) {
+        this.diffRemind = (int) diff;
+    }
+
+    @Override
+    public void invisibleSheetColor() {
+        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetRemind() {
+        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetDate() {
+        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void disableAnotherColor(ViewGroup layout, int idBtn) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            int childid = layout.getChildAt(i).getId();
+            View child = layout.getChildAt(i);
+            if (childid != idBtn) {
+                child.setVisibility(View.GONE);
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -212,53 +249,38 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 break;
             case R.id.btnOkDate:
                 //date
-                String day = String.valueOf(datePicker.getDayOfMonth());
-                String tahun = String.valueOf(datePicker.getYear());
-                String bulan = String.valueOf(datePicker.getMonth() + 1);
-                presenter.setDate(day, bulan, tahun);
+                formatDate();
+                //presenter.setDate(day, bulan, tahun);
                 //time
                 String hour = String.valueOf(timePicker.getHour());
                 String minute = String.valueOf(timePicker.getMinute());
                 presenter.setTime(hour, minute);
                 break;
             case R.id.btnOkRemind:
-                String date = this.date + " " +this.time;
+                String date = this.date + " " + this.time;
                 presenter.calculateDifferenceDate(date);
                 numberPicker.setMinValue(0);
                 numberPicker.setMaxValue(diffRemind);
-                Log.i("Date",date);
+                Log.i("Date", date);
                 break;
         }
     }
 
-    @Override
-    public void getDifference(long diff) {
-        this.diffRemind = (int) diff;
-    }
+    private void formatDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    @Override
-    public void invisibleSheetColor() {
-        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
-    public void invisibleSheetRemind() {
-        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
-    public void invisibleSheetDate() {
-        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
-    public void disableAnotherColor(ViewGroup layout, int idBtn) {
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            int childid = layout.getChildAt(i).getId();
-            View child = layout.getChildAt(i);
-            if (childid != idBtn) {
-                child.setVisibility(View.GONE);
-            }
+        String day = String.valueOf(datePicker.getDayOfMonth());
+        String tahun = String.valueOf(datePicker.getYear());
+        String bulan = String.valueOf(datePicker.getMonth() + 1);
+        String tanggal = day + "/" + bulan + "/" + tahun;
+        try {
+            Date date = sdf.parse(tanggal);
+            Log.i("DateFormat", String.valueOf(date));
+            String hari =(String) DateFormat.format("dd", date);
+            Log.i("HariFormat", hari);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
     }
 }
