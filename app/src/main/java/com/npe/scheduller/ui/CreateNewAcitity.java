@@ -255,19 +255,33 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             case R.id.btnOkDate:
                 //date
                 formatDate();
-                //presenter.setDate(day, bulan, tahun);
                 //time
-                String hour = String.valueOf(timePicker.getHour());
-                String minute = String.valueOf(timePicker.getMinute());
-                presenter.setTime(hour, minute);
+                formatTime();
                 break;
             case R.id.btnOkRemind:
                 String date = this.date + " " + this.time;
                 presenter.calculateDifferenceDate(date);
+                Log.i("Date", date);
+
                 numberPicker.setMinValue(0);
                 numberPicker.setMaxValue(diffRemind);
-                Log.i("Date", date);
                 break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void formatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        String hour = String.valueOf(timePicker.getHour());
+        String minute = String.valueOf(timePicker.getMinute());
+        String waktu = hour+":"+minute;
+        try {
+            Date time = sdf.parse(waktu);
+            String jam = (String) DateFormat.format("hh", time);
+            String menit = (String) DateFormat.format("mm", time);
+            presenter.setTime(jam, menit);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -275,14 +289,17 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         String day = String.valueOf(datePicker.getDayOfMonth());
-        String tahun = String.valueOf(datePicker.getYear());
-        String bulan = String.valueOf(datePicker.getMonth() + 1);
-        String tanggal = day + "/" + bulan + "/" + tahun;
+        String year = String.valueOf(datePicker.getYear());
+        String month = String.valueOf(datePicker.getMonth() + 1);
+        String tanggal = day + "/" + month + "/" + year;
         try {
             Date date = sdf.parse(tanggal);
             Log.i("DateFormat", String.valueOf(date));
             String hari =(String) DateFormat.format("dd", date);
+            String bulan = (String) DateFormat.format("MM", date);
+            String tahun = (String) DateFormat.format("yyyy", date);
             Log.i("HariFormat", hari);
+            presenter.setDate(hari, bulan, tahun);
         } catch (ParseException e) {
             e.printStackTrace();
         }
