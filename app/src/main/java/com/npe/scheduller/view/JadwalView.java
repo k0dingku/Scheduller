@@ -19,6 +19,8 @@ public interface JadwalView {
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
         public void disableAnotherColor(ViewGroup layout, int idBtn);
+
+        public void minDate();
     }
 
     public interface JadwalViewPresenter{

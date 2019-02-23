@@ -1,12 +1,12 @@
 package com.npe.scheduller.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -27,7 +27,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     //btn color
     Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
-
+    //date picker
+    DatePicker datePicker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,10 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorYellow = findViewById(R.id.btnColorYellow);
         btnPickColorGrey = findViewById(R.id.btnColorGrey);
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
+        //datepicker
+        datePicker = findViewById(R.id.datePicker);
+        minDate();
+        
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
@@ -70,8 +75,13 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnRemind.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
 
+
     }
 
+    @Override
+    public void minDate() {
+        datePicker.setMinDate(System.currentTimeMillis());
+    }
 
     @Override
     public void showBottomSheetDate() {
@@ -199,7 +209,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         for (int i = 0; i < layout.getChildCount(); i++) {
             int childid = layout.getChildAt(i).getId();
             View child = layout.getChildAt(i);
-            if(childid != idBtn){
+            if (childid != idBtn) {
                 child.setVisibility(View.GONE);
             }
         }
