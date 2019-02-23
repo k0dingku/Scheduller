@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="0dp"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="95dp"
+    app:behavior_peekHeight="0dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <LinearLayout

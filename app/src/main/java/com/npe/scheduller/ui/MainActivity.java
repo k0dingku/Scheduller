@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
@@ -35,49 +36,13 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         recyclerView = findViewById(R.id.recyclerViewMain);
         btnCreate = findViewById(R.id.btnCreate);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMain);
-        data = new ArrayList<>();
-        data.add(new JadwalModel(1,1,"Saturday","07.00","Test"));
-
-        adapter = new AdapterJadwal(data);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerView.setAdapter(adapter);
-
-
-        calendar();
-
         layoutBottomSheet = findViewById(R.id.bottom_sheet);
 
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                switch (i){
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-                        calendarLayoutBottomSheet.setVisibility(View.GONE);
-                        break;
-                    }
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
 
-            @Override
-            public void onSlide(@NonNull View view, float v) {
+        listactivity();
+        calendar();
+        bottomsheet();
 
-            }
-        });
 
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,5 +82,61 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
             }
         });
+    }
+
+    @Override
+    public void listactivity() {
+
+        data = new ArrayList<>();
+        data.add(new JadwalModel(1,1,"Saturday","07.00","Test"));
+
+        AdapterJadwal adapter = new AdapterJadwal(data);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new AdapterJadwal.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+
+            }
+
+            @Override
+            public void onItemLongClick(int position, View v) {
+
+            }
+        });
+    }
+
+    @Override
+    public void bottomsheet() {
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                switch (i){
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        calendarLayoutBottomSheet.setVisibility(View.GONE);
+                        break;
+                    }
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+
     }
 }
