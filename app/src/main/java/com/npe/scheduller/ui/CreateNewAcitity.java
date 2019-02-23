@@ -1,12 +1,12 @@
 package com.npe.scheduller.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,10 +25,10 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     BottomSheetBehavior sheetBehaviorColor, sheetBehaviorDate, sheetBehaviorRemind;
     String judul;
 
-    BottomSheetBehavior bottomSheetBehavior;
     //btn color
     Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
-
+    //date picker
+    DatePicker datePicker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,61 +47,40 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorYellow = findViewById(R.id.btnColorYellow);
         btnPickColorGrey = findViewById(R.id.btnColorGrey);
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
+        //datepicker
+        datePicker = findViewById(R.id.datePicker);
+        minDate();
+        
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
-
         //set sheet color hiden
         sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
-        bottomSheetColorBehavior();
 
+
+        //date
         layoutBottomDate = findViewById(R.id.bottom_sheet_set_date);
-
         sheetBehaviorDate = BottomSheetBehavior.from(layoutBottomDate);
+        //set sheet date hidden
+        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
 
+        //remind
         layoutBottomRemind = findViewById(R.id.bottom_sheet_remind);
-
         sheetBehaviorRemind = BottomSheetBehavior.from(layoutBottomRemind);
-        bottomSheetColorBehavior();
-        bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomDate);
-        bottomSheetDateBehavior();
-
+        //set sheet remind hidden
+        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         btnDate.setOnClickListener(this);
         btnColor.setOnClickListener(this);
         btnRemind.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
 
+
     }
 
     @Override
-    public void bottomSheetColorBehavior() {
-        sheetBehaviorColor.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                switch (i) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-
-            }
-        });
+    public void minDate() {
+        datePicker.setMinDate(System.currentTimeMillis());
     }
 
     @Override
@@ -114,11 +93,6 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     }
 
     @Override
-    public void bottomSheetDateBehavior() {
-        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
     public void showBottomSheetRemind() {
         if (sheetBehaviorRemind.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -127,10 +101,6 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         }
     }
 
-    @Override
-    public void bottomSheetRemindBehavior() {
-        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
 
     @Override
     public void showBottomSheetColor() {
@@ -169,12 +139,18 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnDate:
+                invisibleSheetColor();
+                invisibleSheetRemind();
                 showBottomSheetDate();
                 break;
             case R.id.btnColor:
+                invisibleSheetDate();
+                invisibleSheetRemind();
                 showBottomSheetColor();
                 break;
             case R.id.btnRemind:
+                invisibleSheetDate();
+                invisibleSheetRemind();
                 showBottomSheetRemind();
                 break;
             case R.id.btnInsert:
@@ -214,11 +190,26 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     }
 
     @Override
+    public void invisibleSheetColor() {
+        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetRemind() {
+        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetDate() {
+        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
     public void disableAnotherColor(ViewGroup layout, int idBtn) {
         for (int i = 0; i < layout.getChildCount(); i++) {
             int childid = layout.getChildAt(i).getId();
             View child = layout.getChildAt(i);
-            if(childid != idBtn){
+            if (childid != idBtn) {
                 child.setVisibility(View.GONE);
             }
         }
