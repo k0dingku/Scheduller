@@ -1,10 +1,12 @@
 package com.npe.scheduller.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.npe.scheduller.R;
@@ -16,6 +18,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     Button btnDate, btnTime, btnColor, btnRemind, btnInsert;
     EditText etJudul;
     String judul;
+
+    BottomSheetBehavior bottomSheetBehavior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,12 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
 
+        LinearLayout linearLayout = findViewById(R.id.bottom_sheet_set_date);
+
+        bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+
         //check judul
 
         btnInsert.setOnClickListener(new View.OnClickListener() {
@@ -40,8 +50,22 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 }
             }
         });
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toogleBottomSheet();
+            }
+        });
     }
 
+
+    private void toogleBottomSheet() {
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
 
     @Override
     public void insertSuccess(String message) {
