@@ -9,6 +9,8 @@ public interface JadwalView {
         public void alertDialogDate(int day, int month, int year);
         public void showBottomSheetColor();
         public void bottomSheetColorBehavior();
+        public void showBottomSheetDate();
+        public void bottomSheetDateBehavior();
         public void insertSuccess(String message);
         public void inserrtFailed(String message);
     }
