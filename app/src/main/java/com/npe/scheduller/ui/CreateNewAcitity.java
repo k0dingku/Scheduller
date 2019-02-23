@@ -1,13 +1,11 @@
 package com.npe.scheduller.ui;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -26,7 +24,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     BottomSheetBehavior bottomSheetBehavior;
     //btn color
-    Button btnColorRed;
+    Button btnPickColorRed, btnPickColorBlue, btnPickColorGreen, btnPickColorYellow, btnPickColorGrey, btnPickColorOrange;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +37,13 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnRemind = findViewById(R.id.btnRemind);
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
-        btnColorRed = findViewById(R.id.btnColorRed);
+
+        btnPickColorRed = findViewById(R.id.btnColorRed);
+        btnPickColorBlue = findViewById(R.id.btnColorBlue);
+        btnPickColorGreen = findViewById(R.id.btnColorGreen);
+        btnPickColorYellow = findViewById(R.id.btnColorYellow);
+        btnPickColorGrey = findViewById(R.id.btnColorGrey);
+        btnPickColorOrange = findViewById(R.id.btnColorOrange);
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
@@ -50,6 +55,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         layoutBottomDate = findViewById(R.id.bottom_sheet_set_date);
 
         bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomDate);
+        bottomSheetDateBehavior();
+
 
         btnDate.setOnClickListener(this);
         btnColor.setOnClickListener(this);
@@ -64,7 +71,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         sheetBehaviorColor.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                switch (i){
+                switch (i) {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED: {
@@ -107,7 +114,13 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     public void showBottomSheetColor() {
         if (sheetBehaviorColor.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+            //color click
+            btnPickColorRed.setOnClickListener(this);
+            btnPickColorBlue.setOnClickListener(this);
+            btnPickColorGreen.setOnClickListener(this);
+            btnPickColorYellow.setOnClickListener(this);
+            btnPickColorGrey.setOnClickListener(this);
+            btnPickColorOrange.setOnClickListener(this);
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -131,7 +144,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnDate:
                 showBottomSheetDate();
                 break;
@@ -142,6 +155,31 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 break;
             case R.id.btnInsert:
                 break;
+            case R.id.btnColorRed:
+                int colorRed = getResources().getColor(R.color.colorRed);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorRed), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnColorBlue:
+                int colorBlue = getResources().getColor(R.color.colorBlue);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorBlue), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnColorGreen:
+                int colorGreen = getResources().getColor(R.color.colorGreen);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGreen), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnColorYellow:
+                int colorYellow = getResources().getColor(R.color.colorYellow);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorYellow), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnColorGrey:
+                int colorGrey = getResources().getColor(R.color.colorGrey);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGrey), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnColorOrange:
+                int colorOrange = getResources().getColor(R.color.colorOrange);
+                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorOrange), Toast.LENGTH_SHORT).show();
+                break;
+
         }
     }
 }
