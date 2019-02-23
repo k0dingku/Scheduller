@@ -23,6 +23,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     LinearLayout layoutBottomColor;
     BottomSheetBehavior sheetBehaviorColor;
     String judul;
+    //btn color
+    Button btnColorRed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnRemind = findViewById(R.id.btnRemind);
         btnInsert = findViewById(R.id.btnInsert);
         etJudul = findViewById(R.id.etCreateJudul);
+        btnColorRed = findViewById(R.id.btnColorRed);
         //color
         layoutBottomColor = findViewById(R.id.layoutBottomSheetColor);
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
@@ -103,6 +106,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     public void showBottomSheetColor() {
         if (sheetBehaviorColor.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_EXPANDED);
+            
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
