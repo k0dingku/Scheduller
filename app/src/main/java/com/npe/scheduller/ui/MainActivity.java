@@ -9,7 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,7 +32,7 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
     private RecyclerView recyclerView;
-    private Button btnCreate, btnDelete;
+    private Button  btnDelete;
     private static RecyclerView.Adapter adapter;
     private static ArrayList<JadwalModel> data;
     LinearLayout fullCalendarBottomSheet,calendarLayoutBottomSheet, layoutBottomSheetOnLong;
@@ -39,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recyclerViewMain);
-        btnCreate = findViewById(R.id.btnCreate);
         btnDelete = findViewById(R.id.btnDelete);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
         fullCalendarBottomSheet = findViewById(R.id.bottom_sheet_calendar);
@@ -51,19 +53,10 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         bottomsheet();
 
 
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toCreate();
-            }
-        });
+
     }
 
-    private void toCreate() {
-        Intent intent = new Intent(getApplicationContext(), CreateNewAcitity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+
 
 
 
@@ -171,5 +164,33 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
             case R.id.btnDelete:
                 deleteconfirmation();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_toolbar,menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.searchForm).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setQueryHint("Task");
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+
+            case R.id.add:
+//                if (savedVersionCode != DOESNT_EXIST) {
+//                    Intent addIntent = new Intent(MainActivity.this, CreateTaskActivity.class);
+//                    startActivity(addIntent);
+//                }
+                Intent intent = new Intent(getApplicationContext(), CreateNewAcitity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
