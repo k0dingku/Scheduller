@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/action_bar_cancel"
-        android:text="Back"
+        android:text="Cancel"
         android:textColor="#ffffff"
         android:textStyle="bold" />
 

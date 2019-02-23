@@ -41,8 +41,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         sheetBehaviorColor = BottomSheetBehavior.from(layoutBottomColor);
 
         //set sheet color hiden
-        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
-        bottomSheetColorBehavior();
+
 
         layoutBottomDate = findViewById(R.id.bottom_sheet_set_date);
 
@@ -52,7 +51,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         layoutBottomRemind = findViewById(R.id.bottom_sheet_remind);
 
         sheetBehaviorRemind = BottomSheetBehavior.from(layoutBottomRemind);
-        bottomSheetColorBehavior();
+
+        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
+        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         date.setOnClickListener(this);
         remind.setOnClickListener(this);
@@ -64,46 +66,23 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.etEditDate:
+                invisibleSheetColor();
+                invisibleSheetRemind();
                 showBottomSheetDate();
                 break;
             case R.id.etEditRemind:
+                invisibleSheetDate();
+                invisibleSheetColor();
                 showBottomSheetRemind();
                 break;
             case R.id.etEditColor:
+                invisibleSheetDate();
+                invisibleSheetRemind();
                 showBottomSheetColor();
                 break;
         }
     }
 
-    @Override
-    public void bottomSheetColorBehavior() {
-        sheetBehaviorColor.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                switch (i){
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-
-            }
-        });
-    }
 
     @Override
     public void showBottomSheetDate() {
@@ -115,11 +94,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void bottomSheetDateBehavior() {
-        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
     public void showBottomSheetRemind() {
         if (sheetBehaviorRemind.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -128,18 +102,32 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void bottomSheetRemindBehavior() {
-        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
 
     @Override
     public void showBottomSheetColor() {
 
         if (sheetBehaviorColor.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_EXPANDED);
+            //color click
+
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+    }
+
+
+    @Override
+    public void invisibleSheetColor() {
+        sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetRemind() {
+        sheetBehaviorRemind.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void invisibleSheetDate() {
+        sheetBehaviorDate.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 }
