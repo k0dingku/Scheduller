@@ -23,6 +23,7 @@ public class JadwalOperations {
             DatabaseHelper.COLUMN_JUDUL,
             DatabaseHelper.COLUMN_DATE,
             DatabaseHelper.COLUMN_REMIND,
+            DatabaseHelper.COLUMN_TIME,
             DatabaseHelper.COLUMN_WARNA
     };
 
@@ -50,14 +51,15 @@ public class JadwalOperations {
         values.put(DatabaseHelper.COLUMN_WARNA, jadwalModel.getWarna());
 
         int insertId = (int) sqLiteDatabase.insert(DatabaseHelper.TABLE_JADWAL, null, values);
+        Log.i(LOGTAG,"Test log"+ String.valueOf(insertId));
         jadwalModel.setId(insertId);
         return jadwalModel;
     }
 
     //check data
-    public Boolean checkRecord(long id){
-        String checkRecord = "SELECT * FROM "+ DatabaseHelper.TABLE_JADWAL + " WHERE " + DatabaseHelper.COLUMN_ID + "=?";
-        Cursor cursor = sqLiteDatabase.rawQuery(checkRecord, new String[]{String.valueOf(id)});
+    public Boolean checkRecord(){
+        String checkRecord = "SELECT * FROM "+ DatabaseHelper.TABLE_JADWAL;
+        Cursor cursor = sqLiteDatabase.rawQuery(checkRecord, new String[]{});
         boolean hasRecord = false;
         if (cursor.moveToFirst()){
             hasRecord = true;
@@ -94,15 +96,17 @@ public class JadwalOperations {
                 null, null, null, null, null);
 
         List<JadwalModel> jadwals = new ArrayList<>();
+        cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 JadwalModel jadwal = new JadwalModel();
                 jadwal.setId(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)));
-                jadwal.setJudul(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_JUDUL)));
-                jadwal.setDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE)));
                 jadwal.setRemind(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REMIND)));
-                jadwal.setTime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME)));
                 jadwal.setWarna(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_WARNA)));
+                jadwal.setDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE)));
+                jadwal.setTime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME)));
+                jadwal.setJudul(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_JUDUL)));
+                jadwals.add(jadwal);
             }
         }
         // return All schedull

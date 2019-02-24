@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "+
                     COLUMN_JUDUL + " TEXT NOT NULL, "+
                     COLUMN_DATE + " TEXT NOT NULL, "+
-                    COLUMN_TIME + " TEXT NOT NULL,"+
+                    COLUMN_TIME + " TEXT NOT NULL, "+
                     COLUMN_WARNA + " INTEGER NOT NULL, "+
                     COLUMN_REMIND + " INTEGER NOT NULL)";
 

@@ -1,7 +1,7 @@
 package com.npe.scheduller.ui;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
+import com.npe.scheduller.model.dbsqlite.JadwalOperations;
 import com.npe.scheduller.view.MainView;
 
 import java.util.Calendar;
@@ -34,9 +36,11 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     private RecyclerView recyclerView;
     private Button  btnDelete;
     private static RecyclerView.Adapter adapter;
-    private static ArrayList<JadwalModel> data;
+    private static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
     LinearLayout fullCalendarBottomSheet,calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
+    JadwalOperations jadwalOperations;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +52,45 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         layoutBottomSheetOnLong = findViewById(R.id.bottom_sheet_onhold);
         btnDelete.setOnClickListener(this);
 
+        jadwalOperations = new JadwalOperations(getApplicationContext());
+
+        try{
+            jadwalOperations.openDb();
+            if(jadwalOperations.checkRecord()==true){
+                masukkinData();
+                Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
+            }
+            jadwalOperations.closeDb();
+        }catch (SQLException e) {
+            Log.i("Error", "Error");
+        }
+
+
         listactivity();
         calendar();
         bottomsheet();
 
+    }
 
+    private void masukkinData() {
+        try{
+            jadwalOperations.openDb();
+            data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
+            listDataJadwal(data);
+            jadwalOperations.closeDb();
+        }catch (SQLException e){
+            Log.i("ErrorGetData", e.getMessage());
+        }
 
     }
 
-
-
+    private void listDataJadwal(ArrayList<JadwalModel> data) {
+        for (int i = 0; i < data.size(); i++) {
+            Log.i("DataJadwal", String.valueOf(data.get(i)));
+        }
+    }
 
 
     @Override
@@ -65,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
         /* starts before 1 month from now */
         Calendar startDate = Calendar.getInstance();
-        startDate.add(Calendar.MONTH, -1);
+        startDate.add(Calendar.DATE, 0);
 
         /* ends after 1 month from now */
         Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.MONTH, 1);
+        endDate.add(Calendar.YEAR, 1);
 
         final HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
                 .range(startDate, endDate)
@@ -87,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     @Override
     public void listactivity() {
 
-        data = new ArrayList<>();
-        data.add(new JadwalModel(1,1,"Saturday","07.00","Test"));
+
 
         AdapterJadwal adapter = new AdapterJadwal(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
@@ -112,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public void bottomsheet() {
         sheetBehaviorOnLong = BottomSheetBehavior.from(layoutBottomSheetOnLong);
         sheetBehaviorCalendar = BottomSheetBehavior.from(fullCalendarBottomSheet);
+        sheetBehaviorCalendar.setHideable(false);
         sheetBehaviorCalendar.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
@@ -144,17 +177,12 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public void deleteconfirmation() {
         ViewGroup viewGroup = findViewById(android.R.id.content);
 
-        //then we will inflate the custom alert dialog xml that we created
         View dialogView = LayoutInflater.from(this).inflate(R.layout.delete_confirm_dialog, viewGroup, false);
 
-
-        //Now we need an AlertDialog.Builder object
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        //setting the view of the builder to our custom view that we already inflated
         builder.setView(dialogView);
 
-        //finally creating the alert dialog and displaying it
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

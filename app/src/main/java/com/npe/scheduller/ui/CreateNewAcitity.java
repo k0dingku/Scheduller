@@ -254,6 +254,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 if (presenter.checkJudul(judul, etJudul)) {
                     save.setVisibility(View.GONE);
                     pbInsert.setVisibility(View.VISIBLE);
+                    Log.i("WKWKWK",time);
                     presenter.dataMasukkan(judul,this.date, time,intRemind,intColor );
                 }
                 break;
