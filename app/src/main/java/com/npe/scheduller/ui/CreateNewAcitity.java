@@ -1,5 +1,6 @@
 package com.npe.scheduller.ui;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -46,7 +48,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     private NumberPicker numberPicker;
     private Button btnOkDate, btnOkRemind, btnOkColor;
     private int intRemind, intColor;
-
+    private ProgressBar pbInsert;
     private TextView save, cancel;
 
     @Override
@@ -76,7 +78,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnOkDate = findViewById(R.id.btnOkDate);
         btnOkRemind = findViewById(R.id.btnOkRemind);
         btnOkColor = findViewById(R.id.btnOkPickColor);
-
+        pbInsert = findViewById(R.id.progresInsert);
         //datepicker
         datePicker = findViewById(R.id.datePicker);
         minDate();
@@ -107,6 +109,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         etColor.setOnClickListener(this);
         etRemind.setOnClickListener(this);
         save.setOnClickListener(this);
+        cancel.setOnClickListener(this);
     }
 
     @Override
@@ -157,12 +160,24 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     @Override
     public void insertSuccess(String message) {
+        pbInsert.setVisibility(View.GONE);
+        save.setVisibility(View.VISIBLE);
+        toMain();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
+    private void toMain() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void inserrtFailed(String message) {
-
+        pbInsert.setVisibility(View.GONE);
+        save.setVisibility(View.VISIBLE);
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -237,7 +252,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
            case R.id.action_bar_save:
                 judul = etJudul.getText().toString();
                 if (presenter.checkJudul(judul, etJudul)) {
-                    Toast.makeText(getApplicationContext(), "Save Click", Toast.LENGTH_SHORT).show();
+                    save.setVisibility(View.GONE);
+                    pbInsert.setVisibility(View.VISIBLE);
                     presenter.dataMasukkan(judul,this.date, time,intRemind,intColor );
                 }
                 break;
@@ -276,6 +292,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 formatDate();
                 //time
                 formatTime();
+                String strTanggal = this.date + " " + this.time;
+                etDate.setText(strTanggal);
                 etRemind.setVisibility(View.VISIBLE);
                 invisibleSheetRemind();
                 invisibleSheetDate();
@@ -283,15 +301,20 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 break;
             case R.id.btnOkRemind:
                 intRemind = numberPicker.getValue();
+                etRemind.setText(String.valueOf("D-"+intRemind));
                 invisibleSheetRemind();
                 invisibleSheetDate();
                 invisibleSheetColor();
                 break;
             case R.id.btnOkPickColor:
-                Toast.makeText(getApplicationContext(), "Click ok color", Toast.LENGTH_SHORT).show();
+                etColor.setHintTextColor(getResources().getColor(R.color.colorWhite));
+                etColor.setBackgroundColor(intColor);
                 invisibleSheetColor();
                 invisibleSheetRemind();
                 invisibleSheetDate();
+                break;
+            case R.id.action_bar_cancel:
+                toMain();
                 break;
         }
     }

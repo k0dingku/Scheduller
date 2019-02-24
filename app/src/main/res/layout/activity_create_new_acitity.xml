@@ -68,4 +68,11 @@
         <include layout="@layout/bottom_sheet_remind"/>
     </android.support.design.widget.CoordinatorLayout>
 
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progresInsert"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
