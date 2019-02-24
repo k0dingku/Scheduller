@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
             jadwalOperations.openDb();
             data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
             listDataJadwal(data);
+            listactivity(data);
             jadwalOperations.closeDb();
-            listactivity();
         } catch (SQLException e) {
             Log.i("ErrorGetData", e.getMessage());
         }
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     }
 
     @Override
-    public void listactivity() {
+    public void listactivity(ArrayList<JadwalModel> data) {
         adapter = new AdapterJadwal(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 
