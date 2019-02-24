@@ -1,6 +1,45 @@
 package com.npe.scheduller.presenter;
 
+import android.content.Context;
+import android.database.SQLException;
+import android.util.Log;
+
+import com.npe.scheduller.model.JadwalModel;
+import com.npe.scheduller.model.dbsqlite.JadwalOperations;
+import com.npe.scheduller.ui.MainActivity;
 import com.npe.scheduller.view.MainView;
 
+import java.util.ArrayList;
+
 public class MainPresenter implements MainView.MainPresenterView {
+    Context context;
+    MainActivity mainActivity;
+    MainView.MainActivityView view;
+    private static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    JadwalOperations jadwalOperations;
+    public MainPresenter(Context context,MainView.MainActivityView view){
+        this.context = context;
+        jadwalOperations = new JadwalOperations(context);
+        this.view = view;
+    }
+    @Override
+    public void masukkinData() {
+        try{
+            jadwalOperations.openDb();
+            mainActivity.data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
+            listDataJadwal(data);
+            jadwalOperations.closeDb();
+        }catch (SQLException e){
+            Log.i("ErrorGetData", e.getMessage());
+        }
+
+    }
+    @Override
+    public void listDataJadwal(ArrayList<JadwalModel> data) {
+        for (int i = 0; i < data.size(); i++) {
+            Log.i("DataJadwal", String.valueOf(data.get(i)));
+        }
+    }
+
+
 }

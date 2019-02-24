@@ -26,6 +26,7 @@ import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
 import com.npe.scheduller.view.MainView;
+import com.npe.scheduller.presenter.MainPresenter;
 
 import java.util.Calendar;
 
@@ -33,10 +34,11 @@ import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
+    private MainPresenter presenter;
     private RecyclerView recyclerView;
     private Button  btnDelete;
-    private static RecyclerView.Adapter adapter;
-    private static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    public static RecyclerView.Adapter adapter;
+    public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
     LinearLayout fullCalendarBottomSheet,calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //inisialisasi
+        presenter = new MainPresenter(getApplicationContext(), this);
+
         recyclerView = findViewById(R.id.recyclerViewMain);
         btnDelete = findViewById(R.id.btnDelete);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
@@ -54,44 +59,30 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
         jadwalOperations = new JadwalOperations(getApplicationContext());
 
-        try{
-            jadwalOperations.openDb();
-            if(jadwalOperations.checkRecord()==true){
-                masukkinData();
-                Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
-            }
-            jadwalOperations.closeDb();
-        }catch (SQLException e) {
-            Log.i("Error", "Error");
-        }
 
 
+        dbtoarraylist();
         listactivity();
         calendar();
         bottomsheet();
 
     }
 
-    private void masukkinData() {
+    @Override
+    public void dbtoarraylist() {
         try{
             jadwalOperations.openDb();
-            data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
-            listDataJadwal(data);
+            if(jadwalOperations.checkRecord()==true){
+                presenter.masukkinData();
+                //Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
+            }else{
+                //Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
+            }
             jadwalOperations.closeDb();
-        }catch (SQLException e){
-            Log.i("ErrorGetData", e.getMessage());
-        }
-
-    }
-
-    private void listDataJadwal(ArrayList<JadwalModel> data) {
-        for (int i = 0; i < data.size(); i++) {
-            Log.i("DataJadwal", String.valueOf(data.get(i)));
+        }catch (SQLException e) {
+            Log.i("Error", "Error");
         }
     }
-
 
     @Override
     public void calendar() {
@@ -186,6 +177,9 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+
+
     @Override
     public void onClick(View v){
         switch (v.getId()){
