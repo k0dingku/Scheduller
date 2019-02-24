@@ -41,5 +41,19 @@ public class MainPresenter implements MainView.MainPresenterView {
         }
     }
 
-
+    @Override
+    public void deleteCard(int position, ArrayList<JadwalModel> data) {
+        try{
+            jadwalOperations.openDb();
+            jadwalOperations.deleteRow(String.valueOf(data.get(position).getId()));
+            Log.i("IdCart", String.valueOf(data.get(position).getId()));
+            Log.i("DeleteCard", "berhasil");
+            view.deleteSucces("Berhasil Delete");
+            //adapter.notifyItemRemoved(position);
+            jadwalOperations.closeDb();
+        }catch (SQLException e){
+            view.deleteFailde("Gagal Delete");
+            Log.i("ErrorDeleteCard", e.getMessage());
+        }
+    }
 }

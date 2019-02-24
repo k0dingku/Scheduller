@@ -137,8 +137,8 @@ public class JadwalOperations {
     }
 
     //deltering spesific row
-    public void deleteRow(String idProduct){
+    public void deleteRow(String id){
         sqLiteDatabase.execSQL("DELETE FROM "+DatabaseHelper.TABLE_JADWAL+" WHERE "+ DatabaseHelper.COLUMN_ID
-                + "=" + idProduct);
+                + "=" + id);
     }
 }
