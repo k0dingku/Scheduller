@@ -205,6 +205,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         String judul, deadline, remind;
         judul = jadwalModel.getJudul();
         deadline = jadwalModel.getDate() + " " + jadwalModel.getTime();
+
+
+        this.time = jadwalModel.getTime();
+        this.date = jadwalModel.getDate();
+            
+
         Log.i("getDate", jadwalModel.getDate());
         remind = String.valueOf(jadwalModel.getRemind());
         etJudul.setText(judul);
@@ -364,7 +370,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 if (presenter.checkJudul(judul, etJudul)) {
                     //save.setVisibility(View.GONE);
                     //Log.i("WKWKWK",time);
-                    presenter.dataMasukkan(idCart, judul,this.date, time,intRemind,intColor );
+                    Log.i("TimeSebelum", this.time);
+                    presenter.dataMasukkan(idCart, judul,this.date, this.time,intRemind,intColor );
                 }
                 break;
         }

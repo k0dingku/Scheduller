@@ -125,6 +125,12 @@ public class JadwalOperations {
         values.put(DatabaseHelper.COLUMN_WARNA, jadwal.getWarna() );
         values.put(DatabaseHelper.COLUMN_DATE, jadwal.getDate() );
 
+        Log.i("IdUpdateOp", String.valueOf(jadwal.getId()));
+        Log.i("JudulUpdateOp", jadwal.getJudul());
+        Log.i("RemUpdateOp", String.valueOf(jadwal.getRemind()));
+        Log.i("TimUpdateOp", jadwal.getTime());
+        Log.i("WarUpdateOp", String.valueOf(jadwal.getWarna()));
+        Log.i("DatUpdateOp", jadwal.getDate());
         // updating row
         return sqLiteDatabase.update(DatabaseHelper.TABLE_JADWAL, values,
                 DatabaseHelper.COLUMN_ID + "=?", new String[]{String.valueOf(jadwal.getId())});

@@ -49,6 +49,7 @@ public class EditPresenter implements EditView.EditPresnterView {
     @Override
     public void setTime(String hour, String minute) {
         String time = hour+":"+minute;
+        Log.i("TimePresenter", time);
         view.getTime(time);
     }
 
