@@ -1,6 +1,5 @@
 package com.npe.scheduller.ui;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import com.npe.scheduller.R;
@@ -37,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     private static ArrayList<JadwalModel> data;
     LinearLayout fullCalendarBottomSheet,calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         calendar();
         bottomsheet();
 
-
-
     }
-
-
-
 
 
     @Override
@@ -65,11 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
         /* starts before 1 month from now */
         Calendar startDate = Calendar.getInstance();
-        startDate.add(Calendar.MONTH, -1);
+        startDate.add(Calendar.DATE, 0);
 
         /* ends after 1 month from now */
         Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.MONTH, 1);
+        endDate.add(Calendar.YEAR, 1);
 
         final HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
                 .range(startDate, endDate)
@@ -112,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public void bottomsheet() {
         sheetBehaviorOnLong = BottomSheetBehavior.from(layoutBottomSheetOnLong);
         sheetBehaviorCalendar = BottomSheetBehavior.from(fullCalendarBottomSheet);
+        sheetBehaviorCalendar.setHideable(false);
         sheetBehaviorCalendar.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
@@ -144,17 +140,12 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public void deleteconfirmation() {
         ViewGroup viewGroup = findViewById(android.R.id.content);
 
-        //then we will inflate the custom alert dialog xml that we created
         View dialogView = LayoutInflater.from(this).inflate(R.layout.delete_confirm_dialog, viewGroup, false);
 
-
-        //Now we need an AlertDialog.Builder object
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        //setting the view of the builder to our custom view that we already inflated
         builder.setView(dialogView);
 
-        //finally creating the alert dialog and displaying it
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
