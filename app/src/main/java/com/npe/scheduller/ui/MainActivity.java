@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     private MainPresenter presenter;
     private RecyclerView recyclerView;
     private Button btnDelete;
-    public static AdapterJadwal adapter;
-    public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    public AdapterJadwal adapter;
+    public ArrayList<JadwalModel> data = new ArrayList<>();
     LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
@@ -69,18 +70,15 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
     }
 
+
+
     @Override
     public void dbtoarraylist() {
         try {
             jadwalOperations.openDb();
-            if (jadwalOperations.checkRecord() == true) {
-                presenter.masukkinData();
-                listactivity();
-                //Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
-            } else {
-                //Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
-            }
+            data = jadwalOperations.getAllJadwal();
             jadwalOperations.closeDb();
+            listactivity();
         } catch (SQLException e) {
             Log.i("Error", "Error");
         }
@@ -114,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public void listactivity() {
 
         adapter = new AdapterJadwal(data);
+        Log.i("Banyaknya","adalah "+data.size());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 
         recyclerView.setLayoutManager(layoutManager);

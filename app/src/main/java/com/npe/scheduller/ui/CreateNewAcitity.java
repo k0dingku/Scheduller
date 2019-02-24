@@ -1,5 +1,6 @@
 package com.npe.scheduller.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -110,6 +113,12 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         etRemind.setOnClickListener(this);
         save.setOnClickListener(this);
         cancel.setOnClickListener(this);
+    }
+
+    private void hiddenKeyboard(View v){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(),
+                InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     @Override
@@ -229,17 +238,19 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             case R.id.etNewDate:
                 invisibleSheetColor();
                 invisibleSheetRemind();
+                hiddenKeyboard(etDate);
                 showBottomSheetDate();
                 break;
             case R.id.etNewColor:
                 invisibleSheetDate();
+                hiddenKeyboard(etColor);
                 invisibleSheetRemind();
                 showBottomSheetColor();
                 break;
             case R.id.etNewRemind:
                 invisibleSheetDate();
                 invisibleSheetRemind();
-
+                hiddenKeyboard(etRemind);
                 String date = this.date + " " + this.time;
                 presenter.calculateDifferenceDate(date);
                 Log.i("Date", date);

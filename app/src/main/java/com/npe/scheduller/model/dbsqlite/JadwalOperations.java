@@ -32,12 +32,12 @@ public class JadwalOperations {
     }
 
     public void openDb() {
-        Log.i(LOGTAG, "DATABASE OPENED");
-        sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
+
+         sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
     }
 
     public void closeDb() {
-        Log.i(LOGTAG, "DATABASE CLOSED");
+
         sqLiteOpenHelper.close();
     }
 
@@ -50,9 +50,11 @@ public class JadwalOperations {
         values.put(DatabaseHelper.COLUMN_TIME, jadwalModel.getTime());
         values.put(DatabaseHelper.COLUMN_WARNA, jadwalModel.getWarna());
 
+
         int insertId = (int) sqLiteDatabase.insert(DatabaseHelper.TABLE_JADWAL, null, values);
-        Log.i(LOGTAG,"Test log"+ String.valueOf(insertId));
+
         jadwalModel.setId(insertId);
+        Log.i(LOGTAG,"Test log"+ String.valueOf(jadwalModel.getId()));
         return jadwalModel;
     }
 
@@ -61,12 +63,8 @@ public class JadwalOperations {
         String checkRecord = "SELECT * FROM "+ DatabaseHelper.TABLE_JADWAL;
         Cursor cursor = sqLiteDatabase.rawQuery(checkRecord, new String[]{});
         boolean hasRecord = false;
-        if (cursor.moveToFirst()){
+        if (cursor.getCount()!=0){
             hasRecord = true;
-            int count = 0;
-            while (cursor.moveToNext()){
-                count++;
-            }
         }
 
         cursor.close();
@@ -91,12 +89,12 @@ public class JadwalOperations {
     }
 
     //get list cart
-    public List<JadwalModel> getAllJadwal() {
+    public ArrayList<JadwalModel> getAllJadwal() {
         Cursor cursor = sqLiteDatabase.query(DatabaseHelper.TABLE_JADWAL, allColumns,
                 null, null, null, null, null);
 
-        List<JadwalModel> jadwals = new ArrayList<>();
-        cursor.moveToFirst();
+        ArrayList<JadwalModel> jadwals = new ArrayList<>();
+        //cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 JadwalModel jadwal = new JadwalModel();

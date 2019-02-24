@@ -24,7 +24,7 @@ public interface MainView {
     public interface MainPresenterView {
         public void deleteCard(int position, ArrayList<JadwalModel> data);
 
-        public void masukkinData();
+
 
         public void listDataJadwal(ArrayList<JadwalModel> data);
     }
