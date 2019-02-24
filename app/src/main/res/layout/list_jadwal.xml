@@ -17,7 +17,7 @@
 
         <Button
             android:id="@+id/btnWarnaSamping"
-            android:layout_width="30dp"
+            android:layout_width="15dp"
             android:layout_height="match_parent" />
 
         <RelativeLayout
@@ -25,13 +25,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.5"
-            android:paddingLeft="30dp">
+            android:paddingLeft="8dp">
 
             <TextView
 
                 android:textColor="@color/colorBlack"
                 android:layout_marginTop="20dp"
                 android:id="@+id/tvDate"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mon,7 Jan 2019" />
@@ -40,6 +41,7 @@
                 android:textColor="@color/colorBlack"
                 android:layout_marginTop="20dp"
                 android:id="@+id/tvTime"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -56,7 +58,7 @@
                 android:layout_below="@id/tvDate"
                 android:layout_marginBottom="20dp"
                 android:text="Make poster design"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textStyle="italic|bold" />
 
 

@@ -1,5 +1,7 @@
 package com.npe.scheduller.ui;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     private MainPresenter presenter;
     private RecyclerView recyclerView;
     private Button btnDelete;
+    private SearchView searchView;
     public static AdapterJadwal adapter;
     public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
     LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
@@ -224,12 +227,33 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.searchForm).getActionView();
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.searchForm)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setQueryHint("Task");
 
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                adapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -248,5 +272,22 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     protected void onResume() {
         super.onResume();
         dbtoarraylist();
+    }
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 }

@@ -6,15 +6,13 @@ import android.os.Bundle;
 
 import com.npe.scheduller.R;
 
-public class SpashScreen extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spash_screen);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        setContentView(R.layout.activity_splash_screen);
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 }

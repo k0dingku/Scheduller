@@ -91,11 +91,11 @@ public class JadwalOperations {
     }
 
     //get list cart
-    public List<JadwalModel> getAllJadwal() {
+    public ArrayList<JadwalModel> getAllJadwal() {
         Cursor cursor = sqLiteDatabase.query(DatabaseHelper.TABLE_JADWAL, allColumns,
                 null, null, null, null, null);
 
-        List<JadwalModel> jadwals = new ArrayList<>();
+        ArrayList<JadwalModel> jadwals = new ArrayList<>();
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -111,6 +111,8 @@ public class JadwalOperations {
         }
         // return All schedull
         return jadwals;
+
+
     }
 
     // Updating cart
