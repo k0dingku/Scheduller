@@ -44,7 +44,10 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     private DatePicker datePicker;
     private TimePicker timePicker;
     private NumberPicker numberPicker;
-    private Button btnOkDate, btnOkRemind;
+    private Button btnOkDate, btnOkRemind, btnOkColor;
+    private int intRemind, intColor;
+
+    private TextView save, cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         getSupportActionBar().setCustomView(R.layout.app_bar);
         TextView title=findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("New Task");
+        save = findViewById(getResources().getIdentifier("action_bar_save", "id", getPackageName()));
+        cancel = findViewById(getResources().getIdentifier("action_bar_cancel", "id", getPackageName()));
 
         //inisialisasi
         presenter = new JadwalPresenter(getApplicationContext(), this);
@@ -70,6 +75,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
         btnOkDate = findViewById(R.id.btnOkDate);
         btnOkRemind = findViewById(R.id.btnOkRemind);
+        btnOkColor = findViewById(R.id.btnOkPickColor);
+
         //datepicker
         datePicker = findViewById(R.id.datePicker);
         minDate();
@@ -99,6 +106,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         etDate.setOnClickListener(this);
         etColor.setOnClickListener(this);
         etRemind.setOnClickListener(this);
+        save.setOnClickListener(this);
     }
 
     @Override
@@ -139,6 +147,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             btnPickColorYellow.setOnClickListener(this);
             btnPickColorGrey.setOnClickListener(this);
             btnPickColorOrange.setOnClickListener(this);
+
+            btnOkColor.setOnClickListener(this);
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -214,57 +224,74 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             case R.id.etNewRemind:
                 invisibleSheetDate();
                 invisibleSheetRemind();
-                showBottomSheetRemind();
-                break;
-//            case R.id.btnInsert:
-//                judul = etJudul.getText().toString();
-//                if (presenter.checkJudul(judul, etJudul)) {
-//                    //presenter.dataMasukkan(judul,date, );
-//                }
-//                break;
-            case R.id.btnColorRed:
-                int colorRed = getResources().getColor(R.color.colorRed);
-                disableAnotherColor(layoutColor, R.id.btnColorRed);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorRed), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnColorBlue:
-                int colorBlue = getResources().getColor(R.color.colorBlue);
-                disableAnotherColor(layoutColor, R.id.btnColorBlue);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorBlue), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnColorGreen:
-                int colorGreen = getResources().getColor(R.color.colorGreen);
-                disableAnotherColor(layoutColor, R.id.btnColorGreen);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGreen), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnColorYellow:
-                int colorYellow = getResources().getColor(R.color.colorYellow);
-                disableAnotherColor(layoutColor, R.id.btnColorYellow);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorYellow), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnColorGrey:
-                int colorGrey = getResources().getColor(R.color.colorGrey);
-                disableAnotherColor(layoutColor, R.id.btnColorGrey);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGrey), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnColorOrange:
-                int colorOrange = getResources().getColor(R.color.colorOrange);
-                disableAnotherColor(layoutColor, R.id.btnColorOrange);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorOrange), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnOkDate:
-                //date
-                formatDate();
-                //time
-                formatTime();
-                break;
-            case R.id.btnOkRemind:
+
                 String date = this.date + " " + this.time;
                 presenter.calculateDifferenceDate(date);
                 Log.i("Date", date);
 
                 numberPicker.setMinValue(0);
                 numberPicker.setMaxValue(diffRemind);
+
+                showBottomSheetRemind();
+                break;
+           case R.id.action_bar_save:
+                judul = etJudul.getText().toString();
+                if (presenter.checkJudul(judul, etJudul)) {
+                    Toast.makeText(getApplicationContext(), "Save Click", Toast.LENGTH_SHORT).show();
+                    presenter.dataMasukkan(judul,this.date, time,intRemind,intColor );
+                }
+                break;
+            case R.id.btnColorRed:
+                int colorRed = getResources().getColor(R.color.colorRed);
+                intColor = colorRed;
+                disableAnotherColor(layoutColor, R.id.btnColorRed);
+                break;
+            case R.id.btnColorBlue:
+                int colorBlue = getResources().getColor(R.color.colorBlue);
+                intColor = colorBlue;
+                disableAnotherColor(layoutColor, R.id.btnColorBlue);
+                break;
+            case R.id.btnColorGreen:
+                int colorGreen = getResources().getColor(R.color.colorGreen);
+                intColor = colorGreen;
+                disableAnotherColor(layoutColor, R.id.btnColorGreen);
+                break;
+            case R.id.btnColorYellow:
+                int colorYellow = getResources().getColor(R.color.colorYellow);
+                intColor = colorYellow;
+                disableAnotherColor(layoutColor, R.id.btnColorYellow);
+                break;
+            case R.id.btnColorGrey:
+                int colorGrey = getResources().getColor(R.color.colorGrey);
+                intColor = colorGrey;
+                disableAnotherColor(layoutColor, R.id.btnColorGrey);
+                break;
+            case R.id.btnColorOrange:
+                int colorOrange = getResources().getColor(R.color.colorOrange);
+                intColor = colorOrange;
+                disableAnotherColor(layoutColor, R.id.btnColorOrange);
+                break;
+            case R.id.btnOkDate:
+                //date
+                formatDate();
+                //time
+                formatTime();
+                etRemind.setVisibility(View.VISIBLE);
+                invisibleSheetRemind();
+                invisibleSheetDate();
+                invisibleSheetColor();
+                break;
+            case R.id.btnOkRemind:
+                intRemind = numberPicker.getValue();
+                invisibleSheetRemind();
+                invisibleSheetDate();
+                invisibleSheetColor();
+                break;
+            case R.id.btnOkPickColor:
+                Toast.makeText(getApplicationContext(), "Click ok color", Toast.LENGTH_SHORT).show();
+                invisibleSheetColor();
+                invisibleSheetRemind();
+                invisibleSheetDate();
                 break;
         }
     }

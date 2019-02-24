@@ -37,6 +37,7 @@
             android:focusable="false" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/etNewRemind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
