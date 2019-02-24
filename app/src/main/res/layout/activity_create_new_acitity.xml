@@ -5,7 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.CreateNewAcitity">
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewNew"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1544132019976371/6723859055"
+        android:background="@color/colorWhite">
+
+    </com.google.android.gms.ads.AdView>
 
     <LinearLayout
         android:layout_width="match_parent"

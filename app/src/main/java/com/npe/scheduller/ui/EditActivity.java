@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.presenter.EditPresenter;
@@ -36,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener, EditView.EditActivityView {
+    private InterstitialAd interstitialAdBack, intertitialAdSave;
+    private AdView adView;
     EditPresenter presenter;
     EditText etJudul, etDeadline, etRemind, etColor;
     private LinearLayout layoutBottomColor,
@@ -55,6 +60,19 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private int intRemind, intColor;
 
     int idCart;
+
+    public void loadAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView = findViewById(R.id.adViewNew);
+        interstitialAdBack = new InterstitialAd(this);
+        intertitialAdSave = new InterstitialAd(this);
+        interstitialAdBack.setAdUnitId("ca-app-pub-1544132019976371/4041855393");
+        interstitialAdBack.loadAd(adRequest);
+        intertitialAdSave.setAdUnitId("ca-app-pub-1544132019976371/8719467004");
+        intertitialAdSave.loadAd(adRequest);
+        adView.loadAd(adRequest);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +227,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         this.time = jadwalModel.getTime();
         this.date = jadwalModel.getDate();
-            
+
 
         Log.i("getDate", jadwalModel.getDate());
         remind = String.valueOf(jadwalModel.getRemind());
@@ -364,6 +382,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.action_bar_cancel:
                 toMain();
+                interstitialAdBack.show();
                 break;
             case R.id.action_bar_save:
                 judul = etJudul.getText().toString();
@@ -373,6 +392,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     Log.i("TimeSebelum", this.time);
                     presenter.dataMasukkan(idCart, judul,this.date, this.time,intRemind,intColor );
                 }
+                intertitialAdSave.show();
                 break;
         }
     }

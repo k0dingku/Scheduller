@@ -4,8 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.EditActivity">
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewEdit"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1544132019976371/7431216319"
+        android:background="@color/colorWhite">
+
+    </com.google.android.gms.ads.AdView>
     <LinearLayout
+        android:layout_below="@id/adViewEdit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

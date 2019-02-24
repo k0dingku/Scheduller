@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.MainActivity">
 
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewMain"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1544132019976371/4706525210"
+        android:background="@color/colorWhite">
 
+    </com.google.android.gms.ads.AdView>
 
     <TextView
+        android:layout_below="@id/adViewMain"
         android:id="@+id/tvHeaderMain"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="30dp"
