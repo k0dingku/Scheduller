@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     private RecyclerView recyclerView;
     private Button btnDelete;
     private SearchView searchView;
-    public static AdapterJadwal adapter;
-    public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    public AdapterJadwal adapter;
+    public ArrayList<JadwalModel> data = new ArrayList<>();
     LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
         fullCalendarBottomSheet = findViewById(R.id.bottom_sheet_calendar);
         layoutBottomSheetOnLong = findViewById(R.id.bottom_sheet_onhold);
-        btnDelete.setOnClickListener(this);
+
 
         jadwalOperations = new JadwalOperations(getApplicationContext());
 
@@ -70,20 +71,17 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         calendar();
         bottomsheet();
 
+        btnDelete.setOnClickListener(this);
+
     }
 
     @Override
     public void dbtoarraylist() {
         try {
             jadwalOperations.openDb();
-            if (jadwalOperations.checkRecord() == true) {
-                presenter.masukkinData();
-                listactivity();
-                //Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
-            } else {
-                //Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
-            }
+            data = jadwalOperations.getAllJadwal();
             jadwalOperations.closeDb();
+            listactivity();
         } catch (SQLException e) {
             Log.i("Error", "Error");
         }
@@ -116,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     @Override
     public void listactivity() {
 
-        adapter = new AdapterJadwal(data);
+        adapter = new AdapterJadwal(this,data);
+        Log.i("Banyaknya","adalah "+data.size());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -234,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setQueryHint("Task");
 
         // listening to search query text change
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -253,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         });
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

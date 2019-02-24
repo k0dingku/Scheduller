@@ -61,7 +61,7 @@ public class JadwalOperations {
         String checkRecord = "SELECT * FROM "+ DatabaseHelper.TABLE_JADWAL;
         Cursor cursor = sqLiteDatabase.rawQuery(checkRecord, new String[]{});
         boolean hasRecord = false;
-        if (cursor.moveToFirst()){
+        if (cursor.getCount()!=0){
             hasRecord = true;
             int count = 0;
             while (cursor.moveToNext()){
@@ -96,7 +96,7 @@ public class JadwalOperations {
                 null, null, null, null, null);
 
         ArrayList<JadwalModel> jadwals = new ArrayList<>();
-        cursor.moveToFirst();
+        //cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 JadwalModel jadwal = new JadwalModel();
@@ -111,8 +111,6 @@ public class JadwalOperations {
         }
         // return All schedull
         return jadwals;
-
-
     }
 
     // Updating cart
