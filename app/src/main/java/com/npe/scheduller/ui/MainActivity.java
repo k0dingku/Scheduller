@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
+import com.npe.scheduller.presenter.MainPresenter;
 import com.npe.scheduller.view.MainView;
 
 import java.util.ArrayList;
@@ -32,74 +34,57 @@ import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
+    private MainPresenter presenter;
     private RecyclerView recyclerView;
     private Button btnDelete;
-    private static AdapterJadwal adapter;
-    private static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    public static AdapterJadwal adapter;
+    public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
     LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
     AlertDialog.Builder dialog;
     LayoutInflater inflater;
-    View dialogView;
     int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //inisialisasi
+        presenter = new MainPresenter(getApplicationContext(), this);
+
         recyclerView = findViewById(R.id.recyclerViewMain);
         btnDelete = findViewById(R.id.btnDelete);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
         fullCalendarBottomSheet = findViewById(R.id.bottom_sheet_calendar);
         layoutBottomSheetOnLong = findViewById(R.id.bottom_sheet_onhold);
-
         btnDelete.setOnClickListener(this);
 
         jadwalOperations = new JadwalOperations(getApplicationContext());
 
 
-        checkData();
-
-
+        dbtoarraylist();
         calendar();
         bottomsheet();
 
     }
 
-    private void checkData() {
+    @Override
+    public void dbtoarraylist() {
         try {
             jadwalOperations.openDb();
-            if (jadwalOperations.checkRecord()) {
-                masukkinData();
-                Toast.makeText(getApplicationContext(), "Data ada", Toast.LENGTH_LONG).show();
+            if (jadwalOperations.checkRecord() == true) {
+                presenter.masukkinData();
+                listactivity();
+                //Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Kosong", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
             }
             jadwalOperations.closeDb();
         } catch (SQLException e) {
             Log.i("Error", "Error");
         }
     }
-
-    private void masukkinData() {
-        try {
-            jadwalOperations.openDb();
-            data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
-            listDataJadwal(data);
-            listactivity(data);
-            jadwalOperations.closeDb();
-        } catch (SQLException e) {
-            Log.i("ErrorGetData", e.getMessage());
-        }
-
-    }
-
-    private void listDataJadwal(ArrayList<JadwalModel> data) {
-        for (int i = 0; i < data.size(); i++) {
-            Log.i("DataJadwal", String.valueOf(data.get(i)));
-        }
-    }
-
 
     @Override
     public void calendar() {
@@ -126,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     }
 
     @Override
-    public void listactivity(ArrayList<JadwalModel> data) {
+    public void listactivity() {
+
         adapter = new AdapterJadwal(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 
@@ -192,10 +178,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         dialog.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteCard(position);
+                presenter.deleteCard(position, data);
                 onResume();
-                Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_SHORT).show();
-                //adapter.notifyDataSetChanged();
                 sheetBehaviorOnLong.setState(BottomSheetBehavior.STATE_HIDDEN);
                 dialog.dismiss();
             }
@@ -204,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -216,25 +199,17 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
         pbutton.setBackgroundColor(getResources().getColor(R.color.colorRed));
         pbutton.setTextColor(getResources().getColor(R.color.colorWhite));
-    }
 
-    private void deleteCard(int position) {
-        try{
-            jadwalOperations.openDb();
-            jadwalOperations.deleteRow(String.valueOf(data.get(position).getId()));
-            Log.i("IdCart", String.valueOf(data.get(position).getId()));
-            Log.i("DeleteCard", "berhasil");
-            //adapter.notifyItemRemoved(position);
-            jadwalOperations.closeDb();
-        }catch (SQLException e){
-            Log.i("ErrorDeleteCard", e.getMessage());
-        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        checkData();
+    public void deleteSucces(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deleteFailde(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -242,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         switch (v.getId()) {
             case R.id.btnDelete:
                 deleteconfirmation();
-                break;
         }
     }
 
@@ -260,11 +234,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.add:
-//                if (savedVersionCode != DOESNT_EXIST) {
-//                    Intent addIntent = new Intent(MainActivity.this, CreateTaskActivity.class);
-//                    startActivity(addIntent);
-//                }
                 Intent intent = new Intent(getApplicationContext(), CreateNewAcitity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -273,4 +244,9 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbtoarraylist();
+    }
 }
