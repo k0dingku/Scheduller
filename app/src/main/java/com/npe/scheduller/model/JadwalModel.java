@@ -19,6 +19,17 @@ public class JadwalModel {
         this.judul = judul;
     }
 
+
+
+    public JadwalModel(int id, String judul, int remind, String date, String time, int warna) {
+        this.id = id;
+        this.remind = remind;
+        this.warna = warna;
+        this.date = date;
+        this.time = time;
+        this.judul = judul;
+    }
+
     public JadwalModel(int id, int remind, int warna, String date, String time, String judul) {
         this.id = id;
         this.remind = remind;

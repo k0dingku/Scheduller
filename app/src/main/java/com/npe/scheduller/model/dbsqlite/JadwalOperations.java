@@ -76,18 +76,21 @@ public class JadwalOperations {
     //get single data cart
     public JadwalModel getUser(long id) {
         Cursor cursor = sqLiteDatabase.query(DatabaseHelper.TABLE_JADWAL, allColumns, DatabaseHelper.COLUMN_ID
-                + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+                + "='"+id+"'",null, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        JadwalModel e = new JadwalModel(
-                Integer.parseInt(cursor.getString(0)),
-                Integer.parseInt(cursor.getString(1)),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4));
+        JadwalModel jadwalModel = new JadwalModel(
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REMIND)),
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_WARNA)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_JUDUL))
+
+        );
         // return Cart
-        return e;
+        return jadwalModel;
     }
 
     //get list cart
@@ -124,6 +127,12 @@ public class JadwalOperations {
         values.put(DatabaseHelper.COLUMN_WARNA, jadwal.getWarna() );
         values.put(DatabaseHelper.COLUMN_DATE, jadwal.getDate() );
 
+        Log.i("IdUpdateOp", String.valueOf(jadwal.getId()));
+        Log.i("JudulUpdateOp", jadwal.getJudul());
+        Log.i("RemUpdateOp", String.valueOf(jadwal.getRemind()));
+        Log.i("TimUpdateOp", jadwal.getTime());
+        Log.i("WarUpdateOp", String.valueOf(jadwal.getWarna()));
+        Log.i("DatUpdateOp", jadwal.getDate());
         // updating row
         return sqLiteDatabase.update(DatabaseHelper.TABLE_JADWAL, values,
                 DatabaseHelper.COLUMN_ID + "=?", new String[]{String.valueOf(jadwal.getId())});
