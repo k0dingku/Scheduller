@@ -37,6 +37,7 @@
             android:focusable="false" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/etNewRemind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,5 +67,12 @@
 
         <include layout="@layout/bottom_sheet_remind"/>
     </android.support.design.widget.CoordinatorLayout>
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progresInsert"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

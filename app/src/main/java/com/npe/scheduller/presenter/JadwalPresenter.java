@@ -94,6 +94,7 @@ public class JadwalPresenter implements JadwalView.JadwalViewPresenter {
     @Override
     public void dataMasukkan(String judul, String date, String time, int remind, int warna) {
         JadwalModel jadwalModel = new JadwalModel(remind, warna, date, time, judul);
+        //Log.i("JadwalModel", String.valueOf(jadwalModel.getId()));
         insertData(jadwalModel);
     }
 }

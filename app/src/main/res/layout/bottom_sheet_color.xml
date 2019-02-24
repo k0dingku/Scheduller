@@ -76,6 +76,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btnOkPickColor"
         android:textColor="@color/colorWhite"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:text="ok"

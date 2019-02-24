@@ -1,5 +1,6 @@
 package com.npe.scheduller.ui;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -44,7 +46,10 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     private DatePicker datePicker;
     private TimePicker timePicker;
     private NumberPicker numberPicker;
-    private Button btnOkDate, btnOkRemind;
+    private Button btnOkDate, btnOkRemind, btnOkColor;
+    private int intRemind, intColor;
+    private ProgressBar pbInsert;
+    private TextView save, cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         getSupportActionBar().setCustomView(R.layout.app_bar);
         TextView title=findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("New Task");
+        save = findViewById(getResources().getIdentifier("action_bar_save", "id", getPackageName()));
+        cancel = findViewById(getResources().getIdentifier("action_bar_cancel", "id", getPackageName()));
 
         //inisialisasi
         presenter = new JadwalPresenter(getApplicationContext(), this);
@@ -70,6 +77,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         btnPickColorOrange = findViewById(R.id.btnColorOrange);
         btnOkDate = findViewById(R.id.btnOkDate);
         btnOkRemind = findViewById(R.id.btnOkRemind);
+        btnOkColor = findViewById(R.id.btnOkPickColor);
+        pbInsert = findViewById(R.id.progresInsert);
         //datepicker
         datePicker = findViewById(R.id.datePicker);
         minDate();
@@ -99,6 +108,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         etDate.setOnClickListener(this);
         etColor.setOnClickListener(this);
         etRemind.setOnClickListener(this);
+        save.setOnClickListener(this);
+        cancel.setOnClickListener(this);
     }
 
     @Override
@@ -139,6 +150,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             btnPickColorYellow.setOnClickListener(this);
             btnPickColorGrey.setOnClickListener(this);
             btnPickColorOrange.setOnClickListener(this);
+
+            btnOkColor.setOnClickListener(this);
         } else {
             sheetBehaviorColor.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -147,12 +160,24 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
 
     @Override
     public void insertSuccess(String message) {
+        pbInsert.setVisibility(View.GONE);
+        save.setVisibility(View.VISIBLE);
+        toMain();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
+    private void toMain() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void inserrtFailed(String message) {
-
+        pbInsert.setVisibility(View.GONE);
+        save.setVisibility(View.VISIBLE);
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -214,60 +239,99 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
             case R.id.etNewRemind:
                 invisibleSheetDate();
                 invisibleSheetRemind();
+
+                String date = this.date + " " + this.time;
+                presenter.calculateDifferenceDate(date);
+                Log.i("Date", date);
+
+                numberPicker.setMinValue(0);
+                numberPicker.setMaxValue(diffRemind);
+
                 showBottomSheetRemind();
                 break;
-//            case R.id.btnInsert:
-//                judul = etJudul.getText().toString();
-//                if (presenter.checkJudul(judul, etJudul)) {
-//                    //presenter.dataMasukkan(judul,date, );
-//                }
-//                break;
+           case R.id.action_bar_save:
+                judul = etJudul.getText().toString();
+                if (presenter.checkJudul(judul, etJudul)) {
+                    save.setVisibility(View.GONE);
+                    pbInsert.setVisibility(View.VISIBLE);
+                    presenter.dataMasukkan(judul,this.date, time,intRemind,intColor );
+                }
+                break;
             case R.id.btnColorRed:
                 int colorRed = getResources().getColor(R.color.colorRed);
+                intColor = colorRed;
                 disableAnotherColor(layoutColor, R.id.btnColorRed);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorRed), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorBlue:
                 int colorBlue = getResources().getColor(R.color.colorBlue);
+                intColor = colorBlue;
                 disableAnotherColor(layoutColor, R.id.btnColorBlue);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorBlue), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorGreen:
                 int colorGreen = getResources().getColor(R.color.colorGreen);
+                intColor = colorGreen;
                 disableAnotherColor(layoutColor, R.id.btnColorGreen);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGreen), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorYellow:
                 int colorYellow = getResources().getColor(R.color.colorYellow);
+                intColor = colorYellow;
                 disableAnotherColor(layoutColor, R.id.btnColorYellow);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorYellow), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorGrey:
                 int colorGrey = getResources().getColor(R.color.colorGrey);
+                intColor = colorGrey;
                 disableAnotherColor(layoutColor, R.id.btnColorGrey);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorGrey), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnColorOrange:
                 int colorOrange = getResources().getColor(R.color.colorOrange);
+                intColor = colorOrange;
                 disableAnotherColor(layoutColor, R.id.btnColorOrange);
-                Toast.makeText(getApplicationContext(), "Color : " + String.valueOf(colorOrange), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnOkDate:
                 //date
                 formatDate();
-                //presenter.setDate(day, bulan, tahun);
                 //time
-                String hour = String.valueOf(timePicker.getHour());
-                String minute = String.valueOf(timePicker.getMinute());
-                presenter.setTime(hour, minute);
+                formatTime();
+                String strTanggal = this.date + " " + this.time;
+                etDate.setText(strTanggal);
+                etRemind.setVisibility(View.VISIBLE);
+                invisibleSheetRemind();
+                invisibleSheetDate();
+                invisibleSheetColor();
                 break;
             case R.id.btnOkRemind:
-                String date = this.date + " " + this.time;
-                presenter.calculateDifferenceDate(date);
-                numberPicker.setMinValue(0);
-                numberPicker.setMaxValue(diffRemind);
-                Log.i("Date", date);
+                intRemind = numberPicker.getValue();
+                etRemind.setText(String.valueOf("D-"+intRemind));
+                invisibleSheetRemind();
+                invisibleSheetDate();
+                invisibleSheetColor();
                 break;
+            case R.id.btnOkPickColor:
+                etColor.setHintTextColor(getResources().getColor(R.color.colorWhite));
+                etColor.setBackgroundColor(intColor);
+                invisibleSheetColor();
+                invisibleSheetRemind();
+                invisibleSheetDate();
+                break;
+            case R.id.action_bar_cancel:
+                toMain();
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void formatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        String hour = String.valueOf(timePicker.getHour());
+        String minute = String.valueOf(timePicker.getMinute());
+        String waktu = hour+":"+minute;
+        try {
+            Date time = sdf.parse(waktu);
+            String jam = (String) DateFormat.format("hh", time);
+            String menit = (String) DateFormat.format("mm", time);
+            presenter.setTime(jam, menit);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -275,14 +339,17 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         String day = String.valueOf(datePicker.getDayOfMonth());
-        String tahun = String.valueOf(datePicker.getYear());
-        String bulan = String.valueOf(datePicker.getMonth() + 1);
-        String tanggal = day + "/" + bulan + "/" + tahun;
+        String year = String.valueOf(datePicker.getYear());
+        String month = String.valueOf(datePicker.getMonth() + 1);
+        String tanggal = day + "/" + month + "/" + year;
         try {
             Date date = sdf.parse(tanggal);
             Log.i("DateFormat", String.valueOf(date));
             String hari =(String) DateFormat.format("dd", date);
+            String bulan = (String) DateFormat.format("MM", date);
+            String tahun = (String) DateFormat.format("yyyy", date);
             Log.i("HariFormat", hari);
+            presenter.setDate(hari, bulan, tahun);
         } catch (ParseException e) {
             e.printStackTrace();
         }
