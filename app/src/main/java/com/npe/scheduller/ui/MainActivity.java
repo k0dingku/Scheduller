@@ -1,5 +1,6 @@
 package com.npe.scheduller.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -16,35 +17,42 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
+import com.npe.scheduller.presenter.MainPresenter;
 import com.npe.scheduller.view.MainView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
+    private MainPresenter presenter;
     private RecyclerView recyclerView;
-    private Button  btnDelete;
-    private static RecyclerView.Adapter adapter;
-    private static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
-    LinearLayout fullCalendarBottomSheet,calendarLayoutBottomSheet, layoutBottomSheetOnLong;
+    private Button btnDelete;
+    public static AdapterJadwal adapter;
+    public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
+    LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
+    AlertDialog.Builder dialog;
+    LayoutInflater inflater;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //inisialisasi
+        presenter = new MainPresenter(getApplicationContext(), this);
+
         recyclerView = findViewById(R.id.recyclerViewMain);
         btnDelete = findViewById(R.id.btnDelete);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
@@ -54,44 +62,29 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
         jadwalOperations = new JadwalOperations(getApplicationContext());
 
-        try{
-            jadwalOperations.openDb();
-            if(jadwalOperations.checkRecord()==true){
-                masukkinData();
-                Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
-            }
-            jadwalOperations.closeDb();
-        }catch (SQLException e) {
-            Log.i("Error", "Error");
-        }
 
-
-        listactivity();
+        dbtoarraylist();
         calendar();
         bottomsheet();
 
     }
 
-    private void masukkinData() {
-        try{
+    @Override
+    public void dbtoarraylist() {
+        try {
             jadwalOperations.openDb();
-            data = (ArrayList<JadwalModel>) jadwalOperations.getAllJadwal();
-            listDataJadwal(data);
+            if (jadwalOperations.checkRecord() == true) {
+                presenter.masukkinData();
+                listactivity();
+                //Toast.makeText(getApplicationContext(),"Data ada",Toast.LENGTH_LONG).show();
+            } else {
+                //Toast.makeText(getApplicationContext(),"Kosong",Toast.LENGTH_LONG).show();
+            }
             jadwalOperations.closeDb();
-        }catch (SQLException e){
-            Log.i("ErrorGetData", e.getMessage());
-        }
-
-    }
-
-    private void listDataJadwal(ArrayList<JadwalModel> data) {
-        for (int i = 0; i < data.size(); i++) {
-            Log.i("DataJadwal", String.valueOf(data.get(i)));
+        } catch (SQLException e) {
+            Log.i("Error", "Error");
         }
     }
-
 
     @Override
     public void calendar() {
@@ -120,9 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     @Override
     public void listactivity() {
 
-
-
-        AdapterJadwal adapter = new AdapterJadwal(data);
+        adapter = new AdapterJadwal(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -131,13 +122,18 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         adapter.setOnItemClickListener(new AdapterJadwal.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                if(sheetBehaviorOnLong.getState()!=BottomSheetBehavior.STATE_EXPANDED){
+                setPosition(position);
+                if (sheetBehaviorOnLong.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehaviorOnLong.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }else{
+                } else {
                     sheetBehaviorOnLong.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
         });
+    }
+
+    private void setPosition(int position) {
+        this.position = position;
     }
 
     @Override
@@ -148,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         sheetBehaviorCalendar.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                switch (i){
+                switch (i) {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         calendarLayoutBottomSheet.setVisibility(View.VISIBLE);
                         break;
@@ -175,28 +171,58 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
 
     @Override
     public void deleteconfirmation() {
-        ViewGroup viewGroup = findViewById(android.R.id.content);
+        dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle("Delete");
+        dialog.setMessage("Are you sure want to delete?");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                presenter.deleteCard(position, data);
+                onResume();
+                sheetBehaviorOnLong.setState(BottomSheetBehavior.STATE_HIDDEN);
+                dialog.dismiss();
+            }
+        });
 
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.delete_confirm_dialog, viewGroup, false);
+        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = dialog.create();
+        alert.show();
+        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        nbutton.setTextColor(getResources().getColor(R.color.colorBlue));
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setBackgroundColor(getResources().getColor(R.color.colorRed));
+        pbutton.setTextColor(getResources().getColor(R.color.colorWhite));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setView(dialogView);
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
+
     @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void deleteSucces(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deleteFailde(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btnDelete:
                 deleteconfirmation();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_toolbar,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.searchForm).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
@@ -206,19 +232,21 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
             case R.id.add:
-//                if (savedVersionCode != DOESNT_EXIST) {
-//                    Intent addIntent = new Intent(MainActivity.this, CreateTaskActivity.class);
-//                    startActivity(addIntent);
-//                }
                 Intent intent = new Intent(getApplicationContext(), CreateNewAcitity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbtoarraylist();
     }
 }
