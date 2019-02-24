@@ -36,14 +36,13 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
     private MainPresenter presenter;
     private RecyclerView recyclerView;
-    private Button btnDelete;
+    private Button btnDelete, btnEdit;
     public static AdapterJadwal adapter;
     public static ArrayList<JadwalModel> data = new ArrayList<JadwalModel>();
     LinearLayout fullCalendarBottomSheet, calendarLayoutBottomSheet, layoutBottomSheetOnLong;
     BottomSheetBehavior sheetBehaviorCalendar, sheetBehaviorOnLong;
     JadwalOperations jadwalOperations;
     AlertDialog.Builder dialog;
-    LayoutInflater inflater;
     int position;
 
     @Override
@@ -52,16 +51,17 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         setContentView(R.layout.activity_main);
         //inisialisasi
         presenter = new MainPresenter(getApplicationContext(), this);
+        btnEdit = findViewById(R.id.btnEdit);
 
         recyclerView = findViewById(R.id.recyclerViewMain);
         btnDelete = findViewById(R.id.btnDelete);
         calendarLayoutBottomSheet = findViewById(R.id.calendarBottomSheet);
         fullCalendarBottomSheet = findViewById(R.id.bottom_sheet_calendar);
         layoutBottomSheetOnLong = findViewById(R.id.bottom_sheet_onhold);
-        btnDelete.setOnClickListener(this);
-
         jadwalOperations = new JadwalOperations(getApplicationContext());
 
+        btnDelete.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
 
         dbtoarraylist();
         calendar();
@@ -217,7 +217,19 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         switch (v.getId()) {
             case R.id.btnDelete:
                 deleteconfirmation();
+                break;
+            case R.id.btnEdit:
+                toEdit(position);
         }
+
+    }
+
+    private void toEdit(int position) {
+        int idCart = data.get(position).getId();
+        Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+        intent.putExtra("id", idCart);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override
