@@ -1,5 +1,6 @@
 package com.npe.scheduller.ui;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.hardware.camera2.params.ColorSpaceTransform;
 import android.support.annotation.NonNull;
@@ -75,8 +76,9 @@ public class AdapterJadwal extends RecyclerView.Adapter<AdapterJadwal.ViewHolder
         mListener = listener;
     }
 
-    public AdapterJadwal(ArrayList<JadwalModel> data) {
+    public AdapterJadwal(Context context,ArrayList<JadwalModel> data) {
         this.dataSet = data;
+        jadwalOperations = new JadwalOperations(context);
     }
 
     @NonNull
