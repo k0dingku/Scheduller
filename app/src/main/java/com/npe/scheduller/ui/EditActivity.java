@@ -63,7 +63,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     public void loadAd(){
         AdRequest adRequest = new AdRequest.Builder().build();
-        adView = findViewById(R.id.adViewNew);
+        adView = findViewById(R.id.adViewEdit);
         interstitialAdBack = new InterstitialAd(this);
         intertitialAdSave = new InterstitialAd(this);
         interstitialAdBack.setAdUnitId("ca-app-pub-1544132019976371/4041855393");
@@ -136,6 +136,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         etColor.setOnClickListener(this);
         save.setOnClickListener(this);
         cancel.setOnClickListener(this);
+        loadAd();
     }
 
     private void minDate() {

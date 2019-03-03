@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         loadAd();
     }
 
-    }
+
 
     @Override
     public void dbtoarraylist() {
