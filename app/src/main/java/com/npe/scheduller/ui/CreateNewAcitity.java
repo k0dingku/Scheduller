@@ -24,6 +24,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.npe.scheduller.R;
 import com.npe.scheduller.presenter.JadwalPresenter;
 import com.npe.scheduller.view.JadwalView;
@@ -33,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateNewAcitity extends AppCompatActivity implements JadwalView.JadwalViewMain, View.OnClickListener {
+    private InterstitialAd interstitialAdBack, intertitialAdSave;
+    private AdView adView;
     private JadwalPresenter presenter;
     private EditText etDate, etColor, etRemind;
     private EditText etJudul;
@@ -53,6 +58,18 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
     private int intRemind, intColor;
     private ProgressBar pbInsert;
     private TextView save, cancel;
+
+    public void loadAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView = findViewById(R.id.adViewNew);
+        interstitialAdBack = new InterstitialAd(this);
+        intertitialAdSave = new InterstitialAd(this);
+        interstitialAdBack.setAdUnitId("ca-app-pub-1544132019976371/8172672090");
+        interstitialAdBack.loadAd(adRequest);
+        intertitialAdSave.setAdUnitId("ca-app-pub-1544132019976371/5163365376");
+        intertitialAdSave.loadAd(adRequest);
+        adView.loadAd(adRequest);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +130,8 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
         etRemind.setOnClickListener(this);
         save.setOnClickListener(this);
         cancel.setOnClickListener(this);
+
+        loadAd();
     }
 
     private void hiddenKeyboard(View v){
@@ -268,6 +287,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                     Log.i("WKWKWK",time);
                     presenter.dataMasukkan(judul,this.date, time,intRemind,intColor );
                 }
+                intertitialAdSave.show();
                 break;
             case R.id.btnColorRed:
                 int colorRed = getResources().getColor(R.color.colorRed);
@@ -327,6 +347,7 @@ public class CreateNewAcitity extends AppCompatActivity implements JadwalView.Ja
                 break;
             case R.id.action_bar_cancel:
                 toMain();
+                interstitialAdBack.show();
                 break;
         }
     }

@@ -24,6 +24,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.npe.scheduller.R;
 import com.npe.scheduller.model.JadwalModel;
 import com.npe.scheduller.model.dbsqlite.JadwalOperations;
@@ -37,6 +40,8 @@ import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity implements MainView.MainActivityView, View.OnClickListener {
+
+    private AdView adView;
     private MainPresenter presenter;
     private RecyclerView recyclerView;
     private SearchView searchView;
@@ -49,6 +54,13 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
     AlertDialog.Builder dialog;
     LayoutInflater inflater;
     int position;
+
+    public void loadAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView = findViewById(R.id.adViewMain);
+
+        adView.loadAd(adRequest);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements MainView.MainActi
         bottomsheet();
 
         btnDelete.setOnClickListener(this);
+        loadAd();
+    }
 
     }
 
