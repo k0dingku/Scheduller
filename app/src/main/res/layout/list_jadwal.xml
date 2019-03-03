@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    app:cardUseCompatPadding="true"
+    android:id="@+id/list_jadwal"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnWarnaSamping"
+            android:layout_width="15dp"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/layoutRelatifCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:paddingLeft="8dp">
+
+            <TextView
+
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvDate"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mon,7 Jan 2019" />
+
+            <TextView
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvTime"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_toEndOf="@id/tvDate"
+                android:text="04.00 PM"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:textColor="@color/colorBlack"
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDate"
+                android:layout_marginBottom="20dp"
+                android:text="Make poster design"
+                android:textSize="25sp"
+                android:textStyle="italic|bold" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Scheduller</string>
+    <string name="header_main">What should i finish?</string>
 </resources>
